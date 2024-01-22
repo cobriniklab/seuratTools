@@ -567,7 +567,7 @@ plotDimRed <- function(input, output, session, seu, plot_types, featureType,
         #                         selected_plot())
         updateSelectizeInput(session, "plottype",
             choices = purrr::flatten_chr(plot_types()),
-            selected = "batch"
+            selected = purrr::flatten_chr(plot_types())[[1]]
         )
     })
     prefill_feature <- reactive({
