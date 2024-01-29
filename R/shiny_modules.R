@@ -1376,8 +1376,12 @@ plotVelocity <- function(input, output, session, seu, loom_path) {
 
     observe({
         req(seu())
-        updateSelectizeInput(session, "varSelect", choices = colnames(seu()[[]]), selected = "batch", server = TRUE)
-        updateSelectizeInput(session, "geneSelect", choices = rownames(seu()[["gene"]]), selected = "RXRG", server = TRUE)
+        updateSelectizeInput(session, "varSelect", choices = colnames(seu()[[]]), selected = "gene_snn_res.0.2", server = TRUE)
+    })
+
+    observe({
+      req(adata())
+      updateSelectizeInput(session, "geneSelect", choices = rownames(adata()$var), selected = rownames(adata()$var)[[1]], server = TRUE)
     })
 
     # reactive val adata ------------------------------
