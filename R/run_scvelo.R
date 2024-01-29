@@ -25,12 +25,14 @@ run_scvelo <- function(seu, loom_path, assay = "gene", fit.quantile = 0.05, chec
         colnames(ldat[[assay]]) <- str_replace(colnames(ldat[[assay]]), "x$", "-1")
     }
 
+    ldat <- map(ldat, ~{.x[rownames(.x) %in% rownames(seu), ]})
+    ldat <- map(ldat, ~{.x[!duplicated(rownames(.x)),]})
     bm <- Seurat::as.Seurat(x = ldat)
-    bm <- bm[rownames(bm) %in% rownames(seu), ]
 
-    bm[[assay]] <- bm[["spliced"]]
+    # bm[[assay]] <- bm[["spliced"]]
 
     # subset bm by seurat object.size
+    colnames(bm) <- str_remove(colnames(bm), '_Aligned.sortedByCoord.out.bam')
     bm <- bm[, colnames(bm) %in% colnames(seu)]
 
     # subset seurat object by ldat
@@ -68,6 +70,12 @@ run_scvelo <- function(seu, loom_path, assay = "gene", fit.quantile = 0.05, chec
 convert_to_h5ad <- function(seu, file_path) {
     h5seurat_path <- fs::path_ext_set(file_path, ".h5Seurat")
     message(h5seurat_path)
+
+    for(assay in Seurat::Assays(seu)){
+      message(assay)
+      seu[[assay]] <- as(object = seu[[assay]], Class = "Assay")
+    }
+
     SeuratDisk::SaveH5Seurat(seu, filename = h5seurat_path, overwrite = TRUE)
 
     h5ad_path <- fs::path_ext_set(file_path, ".h5ad")
