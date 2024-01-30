@@ -129,12 +129,9 @@ add_read_count_col <- function(seu, thresh = 1e5) {
 #' @examples
 #' add_percent_mito(panc8)
 #' add_percent_mito(baron2016singlecell, organism = "mouse")
-add_percent_mito <- function(seu, organism = "human", seurat_assay = "gene") {
-    mito_features <- mito_features[[organism]][["gene"]]
+add_percent_mito <- function(seu, seurat_assay = "gene") {
 
-    mito_features <- mito_features[mito_features %in% rownames(seu[[seurat_assay]])]
-
-    seu[["percent.mt"]] <- PercentageFeatureSet(seu, features = mito_features)
+    seu[["percent.mt"]] <- PercentageFeatureSet(seu, pattern = "^MT-", assay = seurat_assay)
 
     return(seu)
 }
