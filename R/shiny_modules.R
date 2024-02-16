@@ -22,7 +22,7 @@ plotClustree_UI <- function(id) {
 #' @param input
 #' @param output
 #' @param session
-#' @param seu
+#' @param seu Seurat object
 #'
 #' @return
 #' @export

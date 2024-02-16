@@ -1,3 +1,5 @@
+# seurat_integration_pipeline()
+
 test_that("integration pipeline works", {
     batches <- panc8 %>%
         Seurat::SplitObject(split.by = "tech")
@@ -6,6 +8,8 @@ test_that("integration pipeline works", {
 
     expect_equal(names(integrated_seu@assays), c(names(panc8@assays), "integrated"))
 })
+
+# seurat_pipeline()
 
 test_that("seurat pipeline works", {
     processed_seu <- seurat_pipeline(panc8)

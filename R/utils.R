@@ -35,7 +35,7 @@ format_new_metadata <- function(seu, datapath) {
 #' @param cols Columns
 #' @param new_col New columns
 #'
-#' @return
+#' @return A table with new metadata columns
 #' @export
 #'
 #' @examples
@@ -62,9 +62,11 @@ combine_cols <- function(seu, cols, new_col) {
 
 #' Filter Rows to Top
 #'
-#' @param df
-#' @param column
-#' @param values
+#' Filter rows that match the desired value to the top.
+#'
+#' @param df A data frame
+#' @param column Column containing the values of choice
+#' @param values Values to be filtered to the top
 #'
 #' @return
 #' @export
@@ -85,7 +87,7 @@ filter_rows_to_top <- function(df, column, values) {
 
 #' Collate list of variables to be plotted
 #'
-#' @param seu
+#' @param seu Seurat object
 #'
 #' @return plot_types
 #' @export
@@ -187,9 +189,11 @@ prep_plot_genes_in_pseudotime <- function(cds, mygenes, resolution, partition = 
 
 #' Record Experiment Metadata
 #'
+#' Record the technical metadata for the for a Seurat object
+#'
 #' @param object A seurat objet
-#' @param experiment_name
-#' @param organism
+#' @param experiment_name Name of the experiment
+#' @param organism Organism
 #'
 #' @return
 #' @export
@@ -522,7 +526,7 @@ append_to_project_db <- function(new_project_path, projects_dir = NULL,
 #'
 #' Reads database of chevreul projects to a data frame
 #'
-#' @param projects_dir
+#' @param projects_dir Project directory containing chevreul projects
 #' @param cache_location Path to cache "~/.cache/chevreul"
 #' @param sqlite_db sqlite db
 #' @param verbose
@@ -551,6 +555,7 @@ read_project_db <- function(projects_dir = NULL,
 
 #' Make Bigwig Database
 #'
+#' Build a database containg bigwig files
 #'
 #' @param new_project Project directory
 #' @param cache_location Path to cache "~/.cache/chevreul"
@@ -582,7 +587,7 @@ make_bigwig_db <- function(new_project = NULL, cache_location = "~/.cache/chevre
 
 #' Retrieve Metadata from Batch
 #'
-#' @param batch
+#' @param batch Batch
 #' @param projects_dir path to project dir
 #' @param db_path path to .db file
 #'
@@ -633,7 +638,7 @@ swap_counts_from_feature <- function(cds, featureType) {
 
 #' convert seurat list to multimodal object
 #'
-#' @param seu_list
+#' @param seu_list A seurat list
 #'
 #' @return
 #' @export

@@ -120,7 +120,7 @@ add_read_count_col <- function(seu, thresh = 1e5) {
 #'  Add a Read Count Categorical Variable to Seurat Object (based on nCount_RNA)
 #'
 #' @param seu A seurat object
-#' @param organism mouse
+#'
 #' @param seurat_assay gene
 #'
 #' @return
@@ -129,7 +129,7 @@ add_read_count_col <- function(seu, thresh = 1e5) {
 #' @examples
 #' add_percent_mito(panc8)
 #' add_percent_mito(baron2016singlecell, organism = "mouse")
-add_percent_mito <- function(seu, seurat_assay = "gene") {
+add_percent_mito <- function(seu, organism = organism, seurat_assay = "gene") {
 
     seu[["percent.mt"]] <- PercentageFeatureSet(seu, pattern = "^MT-", assay = seurat_assay)
 

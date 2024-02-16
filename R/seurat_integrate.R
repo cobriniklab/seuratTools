@@ -212,9 +212,9 @@ load_seurat_path <- function(proj_dir = getwd(), prefix = "unfiltered") {
 }
 
 
-#' Load Seurat Files from a signle project path
+#' Load Seurat Files from a single project path
 #'
-#' @param proj_dir
+#' @param proj_dir Path to project
 #' @param ...
 #'
 #' @return
@@ -280,6 +280,8 @@ seurat_reduce_dimensions <- function(seu, assay = "gene", reduction = "pca", leg
 #'
 #' Give a new project name to a seurat object
 #'
+#' Function to assign new project name to a Seurat object
+#'
 #' @param seu A Seurat object
 #' @param new_name New name to assign
 #'
@@ -330,9 +332,11 @@ filter_merged_seus <- function(seus, filter_var, filter_val, .drop = F) {
 
 #' Filter a Single Seurat Object
 #'
+#' Filters a seurat object, retaining all the desired values of a variable
+#'
 #' @param seu A seurat object
-#' @param filter_var
-#' @param filter_val
+#' @param filter_var Variables to filter
+#' @param filter_val Values to filter
 #' @param .drop
 #'
 #' @return

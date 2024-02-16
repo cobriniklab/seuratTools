@@ -71,9 +71,13 @@ convert_to_h5ad <- function(seu, file_path) {
     h5seurat_path <- fs::path_ext_set(file_path, ".h5Seurat")
     message(h5seurat_path)
 
-    for(assay in Seurat::Assays(seu)){
+    for (assay in Seurat::Assays(seu)) {
       message(assay)
-      seu[[assay]] <- as(object = seu[[assay]], Class = "Assay")
+      # seu[[assay]] <- as(object = seu[[assay]], Class = "Assay")
+      # add copy of "RNA"
+      seu[[assay]] <- CreateAssayObject(counts = seu[[assay]]$counts)
+      # # remove original
+      # seu[["RNA"]] <- NULL
     }
 
     SeuratDisk::SaveH5Seurat(seu, filename = h5seurat_path, overwrite = TRUE)
