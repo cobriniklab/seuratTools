@@ -24,8 +24,7 @@ dockerSeuratApp(
 Create a seurat app on a shinyproxy docker instance
 }
 \examples{
-
-/dontrun{
+\dontrun{
 dockerSeuratApp(panc8)
 }
 

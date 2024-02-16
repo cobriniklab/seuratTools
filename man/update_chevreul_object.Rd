@@ -13,6 +13,8 @@ update_chevreul_object(
 )
 }
 \arguments{
+\item{seu_path}{Path to a seurat object}
+
 \item{...}{}
 }
 \description{

@@ -18,14 +18,15 @@ minimalSeuratApp(
 
 \item{loom_path}{path to a loom file}
 
+\item{organism_type}{Organism}
+
 \item{futureMb}{}
 }
 \description{
 Create a minimal seurat app
 }
 \examples{
-
-/dontrun{
+\dontrun{
 minimalSeuratApp(panc8)
 }
 
