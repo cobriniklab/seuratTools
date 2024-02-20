@@ -15,7 +15,7 @@
 #' }
 #'
 minimalSeuratApp <- function(object = panc8, loom_path = NULL, appTitle = NULL,
-    organism_type = "human", futureMb = 13000, bigwig_db = "~/.cache/chevreul/bw-files.db") {
+    organism_type = "human", futureMb = 13000, bigwig_db = "~/.cache/seuratTools/bw-files.db") {
     future::plan(strategy = "multicore", workers = 6)
     future_size <- futureMb * 1024^2
     options(future.globals.maxSize = future_size)
@@ -73,7 +73,7 @@ minimalSeuratApp <- function(object = panc8, loom_path = NULL, appTitle = NULL,
                 plotDimRedui("plotdimred2"),
                 plotReadCountui("plotreadcount1"),
                 plotReadCountui("plotreadcount2"),
-                chevreulBox(
+                seuratToolsBox(
                     title = "Selected Cells",
                     tableSelectedui("tableselected"),
                     width = 6
@@ -106,7 +106,7 @@ minimalSeuratApp <- function(object = panc8, loom_path = NULL, appTitle = NULL,
                 h2("Subset Seurat Input") %>%
                     default_helper(type = "markdown", content = "subsetSeurat"),
                 plotDimRedui("subset"),
-                chevreulBox(
+                seuratToolsBox(
                     title = "Subset Settings",
                     checkboxInput("legacySettingsSubset", "Use Legacy Settings", value = FALSE),
                     actionButton("subsetAction", "subset seurat by selected cells"),
@@ -120,7 +120,7 @@ minimalSeuratApp <- function(object = panc8, loom_path = NULL, appTitle = NULL,
                     textOutput("subsetMessages"),
                     width = 6
                 ),
-                chevreulBox(
+                seuratToolsBox(
                     title = "Selected Cells", tableSelectedui("subset"),
                     width = 6
                 )
@@ -152,7 +152,7 @@ minimalSeuratApp <- function(object = panc8, loom_path = NULL, appTitle = NULL,
             shinydashboard::tabItem(
                 tabName = "regressFeatures",
                 fluidRow(
-                    chevreulBox(
+                    seuratToolsBox(
                         title = "Regress Features",
                         actionButton(
                             "regressAction",
@@ -199,7 +199,7 @@ minimalSeuratApp <- function(object = panc8, loom_path = NULL, appTitle = NULL,
     server <- function(input, output, session) {
         w <- waiter::Waiter$new()
 
-        shinyhelper::observe_helpers(help_dir = system.file("helpers", package = "chevreul", lib.loc = "/dataVolume/storage/rpkgs/devel_install/"))
+        shinyhelper::observe_helpers(help_dir = system.file("helpers", package = "seuratTools", lib.loc = "/dataVolume/storage/rpkgs/devel_install/"))
         options(warn = -1)
         # shinylogs::track_usage(storage_mode = shinylogs::store_json(path = "logs/"))
         # projects_db <- "/dataVolume/storage/single_cell_projects/single_cell_projects.db"
@@ -437,7 +437,7 @@ minimalSeuratApp <- function(object = panc8, loom_path = NULL, appTitle = NULL,
                 title = "Regressing out provided list of features",
                 "This process may take a minute or two!"
             ))
-            regressed_seu <- chevreul::regress_by_features(seu(),
+            regressed_seu <- seuratTools::regress_by_features(seu(),
                 feature_set = list(input$geneSet), set_name = janitor::make_clean_names(input$geneSetName),
                 regress = input$runRegression
             )

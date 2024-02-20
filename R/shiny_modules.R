@@ -9,7 +9,7 @@
 plotClustree_UI <- function(id) {
     ns <- NS(id)
     tagList(
-        chevreulBox(
+        seuratToolsBox(
             title = "Clustering Tree",
             # textOutput(ns("checkSeu")),
             plotOutput(ns("clustree"), height = "700px")
@@ -60,7 +60,7 @@ plotClustree <- function(input, output, session, seu) {
 plotViolinui <- function(id) {
     ns <- NS(id)
     tagList(
-        chevreulBox(
+        seuratToolsBox(
             title = "Violin Plots",
             uiOutput(ns("vln_group")),
             selectizeInput(ns("customFeature"),
@@ -168,7 +168,7 @@ plotViolin <- function(input, output, session, seu, featureType, organism_type) 
 plotHeatmapui <- function(id) {
     ns <- NS(id)
     tagList(
-        chevreulBox(
+        seuratToolsBox(
             title = "Heatmap",
             uiOutput(ns("colAnnoVarui")),
             radioButtons(ns("slot"), "Data Scaling", choices = c(scaled = "scale.data", unscaled = "data"), selected = "scale.data", inline = TRUE),
@@ -226,7 +226,7 @@ plotHeatmap <- function(input, output, session, seu, featureType, organism_type)
         req(seu())
 
         formatted_col_names <- colnames(seu()@meta.data) %>%
-            make_chevreul_clean_names()
+            make_seuratTools_clean_names()
 
         selectizeInput(ns("colAnnoVar"), "Column Annotation(s)",
             choices = formatted_col_names, selected = "batch", multiple = TRUE
@@ -283,7 +283,7 @@ plotHeatmap <- function(input, output, session, seu, featureType, organism_type)
 integrateProjui <- function(id) {
     ns <- NS(id)
     tagList(
-        chevreulBox(
+        seuratToolsBox(
             title = "Integrate Projects",
             actionButton(ns("integrateAction"), "Integrate Selected Projects"),
             # shinyjs::useShinyjs(),
@@ -502,7 +502,7 @@ changeEmbedParams <- function(input, output, session, seu) {
 #' @examples
 plotDimRedui <- function(id) {
     ns <- NS(id)
-    chevreulBox(
+    seuratToolsBox(
         title = "Embedding",
         dropdownButton(
             ns("dimPlotSettings"),
@@ -714,7 +714,7 @@ tableSelected <- function(input, output, session, seu) {
 diffexui <- function(id) {
     ns <- NS(id)
     tagList(
-        chevreulBox(
+        seuratToolsBox(
             title = "Differential Expression Settings",
             radioButtons(ns("diffex_scheme"),
                 "Cells to Compare",
@@ -760,7 +760,7 @@ diffexui <- function(id) {
             DT::dataTableOutput(ns("DT1")),
             width = 6
         ),
-        chevreulBox(
+        seuratToolsBox(
             title = "Volcano Plot",
             sliderInput(ns("FCcutoff"), "FC cutoff value (log2 fold change)",
                 min = 0, max = 10, step = 0.5, value = 1
@@ -772,7 +772,7 @@ diffexui <- function(id) {
             downloadButton(ns("downloadVolcanoPlot"), "Download Volcano Plot"),
             width = 6
         ),
-        # chevreulBox(
+        # seuratToolsBox(
         #   title = "Cells",
         #   tabsetPanel(type = "tabs",
         #               tabPanel("Selected Cells", tableSelectedui("diffex")),
@@ -782,15 +782,15 @@ diffexui <- function(id) {
         #   width = 6
         # ),
 
-        chevreulBox(
+        seuratToolsBox(
             title = "Selected Cells",
             tableSelectedui("diffex"),
             width = 12
         ),
-        chevreulBox(
+        seuratToolsBox(
             title = "Custom Cluster 1", DT::DTOutput(ns("cc1")),
             width = 6
-        ), chevreulBox(
+        ), seuratToolsBox(
             title = "Custom Cluster 2", DT::DTOutput(ns("cc2")),
             width = 6
         ),
@@ -978,7 +978,7 @@ diffex <- function(input, output, session, seu, featureType, selected_cells, tes
 findMarkersui <- function(id) {
     ns <- NS(id)
     tagList(
-        chevreulBox(
+        seuratToolsBox(
             title = "Find Markers",
             uiOutput(ns("dplottype")),
             sliderInput(ns("resolution2"), label = "Resolution of clustering algorithm (affects number of clusters)", min = 0.2, max = 2, step = 0.2, value = 0.6),
@@ -1090,7 +1090,7 @@ findMarkers <- function(input, output, session, seu, plot_types, featureType) {
 #' @examples
 plotReadCountui <- function(id) {
     ns <- NS(id)
-    chevreulBox(
+    seuratToolsBox(
         title = "Histogram (Read Counts, etc.)",
         uiOutput(ns("metavarui")),
         uiOutput(ns("colorbyui")),
@@ -1195,7 +1195,7 @@ allTranscriptsui <- function(id) {
     ns <- NS(id)
     tagList(
         default_helper(
-            chevreulBox(
+            seuratToolsBox(
                 title = "Transcript Expression per Gene",
                 selectizeInput(ns("embeddingGene"), "Gene or transcript expression by which to color the plot; eg. 'RXRG'", choices = NULL, selected = NULL),
                 selectizeInput(ns("transcriptSelect"), "Transcript to Plot", choices = NULL),
@@ -1208,7 +1208,7 @@ allTranscriptsui <- function(id) {
             type = "markdown", content = "allTranscripts"
         ),
         default_helper(
-            chevreulBox(
+            seuratToolsBox(
                 title = "Transcript Expression per Gene",
                 selectizeInput(ns("compositionGene"), "Gene or transcript expression by which to color the plot; eg. 'RXRG'", choices = NULL, selected = NULL),
                 selectizeInput(ns("groupby"), "Group by:", choices = NULL, selected = NULL),
@@ -1246,7 +1246,7 @@ allTranscripts <- function(input, output, session, seu,
         updateSelectizeInput(session, "embeddingGene", choices = rownames(seu()[["gene"]]), selected = "RXRG", server = TRUE)
 
         formatted_col_names <- colnames(seu()@meta.data) %>%
-            make_chevreul_clean_names()
+            make_seuratTools_clean_names()
 
         updateSelectizeInput(session, "groupby", choices = formatted_col_names, selected = "batch", server = TRUE)
     })
@@ -1323,7 +1323,7 @@ allTranscripts <- function(input, output, session, seu,
 plotVelocityui <- function(id) {
     ns <- NS(id)
     tagList(
-        chevreulBox(
+        seuratToolsBox(
             title = "Calculate Velocity",
             width = 4,
             textOutput(ns("velocityFlag")),
@@ -1331,7 +1331,7 @@ plotVelocityui <- function(id) {
             actionButton(ns("calc_velocity"), "calculate velocity"),
             textOutput(ns("scveloMessages")),
         ),
-        chevreulBox(
+        seuratToolsBox(
             title = "Plot Veloctiy on Embedding",
             width = 12,
             selectizeInput(ns("embedding"), "dimensional reduction method",
@@ -1345,7 +1345,7 @@ plotVelocityui <- function(id) {
             downloadButton(ns("downloadEmbeddingPlot"), label = "Download Plot"),
             imageOutput(ns("velocityEmbeddingPlot"), height = "800px")
         ),
-        chevreulBox(
+        seuratToolsBox(
             title = "Plot Velocity and Expression",
             width = 12,
             selectizeInput(ns("geneSelect"), "Select a Gene", choices = NULL, selected = NULL, multiple = TRUE),
@@ -1534,13 +1534,13 @@ monocleui <- function(id) {
     ns <- NS(id)
     tagList(
         fluidRow(
-            chevreulBox(
+            seuratToolsBox(
                 title = "Seurat Data",
                 plotly::plotlyOutput(ns("seudimplot"), height = 500),
                 width = 6
                 # plotDimRedui(ns("plotdimred")
             ),
-            chevreulBox(
+            seuratToolsBox(
                 title = "Pseudotime Settings",
                 actionButton(ns("subsetSeurat"), "Subset Seurat before Pseudotime Calculation"),
                 actionButton(ns("calcCDS"), "Calculate Pseudotime"),
@@ -1555,7 +1555,7 @@ monocleui <- function(id) {
                 width = 6
             )
         ),
-        chevreulBox(
+        seuratToolsBox(
             title = "Embedding Plot",
             selectizeInput(ns("plottype1"), "Variable to Plot", choices = c(Louvain = "louvain"), selected = "Louvain", multiple = TRUE),
             selectizeInput(ns("customFeature1"), "Gene or transcript expression by which to color the plot",
@@ -1565,7 +1565,7 @@ monocleui <- function(id) {
             plotly::plotlyOutput(ns("monoclePlot1")),
             width = 6
         ),
-        chevreulBox(
+        seuratToolsBox(
             title = "Embedding Plot",
             selectizeInput(ns("plottype2"), "Variable to Plot", choices = c(Louvain = "louvain"), selected = "Louvain", multiple = TRUE),
             selectizeInput(ns("customFeature2"), "gene or transcript on which to color the plot",
@@ -1576,7 +1576,7 @@ monocleui <- function(id) {
             width = 6
         ),
         fluidRow(
-            chevreulBox(
+            seuratToolsBox(
                 title = "calculate pseudotime",
                 radioButtons(ns("diffexFeature"), "Feature for differential expression", choices = c("gene", "transcript")),
                 actionButton(ns("calcPtimeGenes"), "Find Pseudotime Correlated Genes"),
@@ -1589,14 +1589,14 @@ monocleui <- function(id) {
                 # uiOutput(ns("ptimeGenes")),
                 width = 6
             ),
-            chevreulBox(
+            seuratToolsBox(
                 title = "Plot Feature Expression over Pseudotime",
                 plotly::plotlyOutput(ns("ptimeGenesLinePlot")),
                 width = 6,
                 height = 650
             )
         ),
-        chevreulBox(
+        seuratToolsBox(
             title = "Heatmap",
             uiOutput(ns("colAnnoVarui")),
             radioButtons(ns("heatmapRows"), "annotate heatmap rows by genes or modules?", choices = c("modules", "genes")),
@@ -1604,7 +1604,7 @@ monocleui <- function(id) {
             downloadButton(ns("downloadCds"), "Download celldataset"),
             plotOutput(ns("monocleHeatmap"), width = "800px", height = "1200px")
         ),
-        chevreulBox(
+        seuratToolsBox(
             title = "Modules",
             plotOutput(ns("modulePlot")),
             div(DT::dataTableOutput(ns("moduleTable")), style = "font-size: 75%")
@@ -1984,7 +1984,7 @@ monocle <- function(input, output, session, seu, plot_types, featureType,
 #' @examples
 pathwayEnrichmentui <- function(id) {
     ns <- NS(id)
-    chevreulBox(
+    seuratToolsBox(
         title = "Enriched pathways by cluster",
         tagList(
             actionButton(ns("calcPathwayEnrichment"), "Calculate Pathway Enrichment"),
@@ -2169,7 +2169,7 @@ pathwayEnrichment <- function(input, output, session, seu, featureType) {
 techInfoui <- function(id) {
     ns <- NS(id)
     fluidRow(
-        chevreulBox(
+        seuratToolsBox(
             title = "Information about samples and analysis",
             htmlOutput(ns("sample_info_general")),
             width = 12
@@ -2284,8 +2284,8 @@ techInfo <- function(input, output, session, seu) {
                 info,
                 "<strong><u>Technical info (package versions)</u></strong>",
                 "<ul>",
-                "<li><strong>chevreul version:</strong> ",
-                misc()$experiment$technical_info$chevreul_version,
+                "<li><strong>seuratTools version:</strong> ",
+                misc()$experiment$technical_info$seuratTools_version,
                 "<li><strong>Seurat version:</strong> ",
                 misc()$technical_info$seurat_version,
                 "<li><strong>Session info:</strong> ",
@@ -2318,7 +2318,7 @@ techInfo <- function(input, output, session, seu) {
 plotCoverage_UI <- function(id) {
     ns <- NS(id)
     tagList(
-        chevreulBox(
+        seuratToolsBox(
             title = "Plot Coverage",
             selectizeInput(ns("geneSelect"), "Select a Gene", choices = NULL, selected = "RXRG", multiple = FALSE),
             selectizeInput(ns("varSelect"), "Color by Variable", choices = NULL, multiple = FALSE),
@@ -2357,7 +2357,7 @@ plotCoverage_UI <- function(id) {
 #' @export
 #'
 #' @examples
-plotCoverage <- function(input, output, session, seu, plot_types, proj_dir, organism_type = "human", bigwig_db = "~/.cache/chevreul/bw-files.db") {
+plotCoverage <- function(input, output, session, seu, plot_types, proj_dir, organism_type = "human", bigwig_db = "~/.cache/seuratTools/bw-files.db") {
     ns <- session$ns
 
     w <- waiter::Waiter$new(ns("coveragePlot"),
@@ -2370,7 +2370,7 @@ plotCoverage <- function(input, output, session, seu, plot_types, proj_dir, orga
         updateSelectizeInput(session, "geneSelect", choices = rownames(seu()[["gene"]]), server = TRUE)
 
         formatted_col_names <- colnames(seu()@meta.data) %>%
-            make_chevreul_clean_names()
+            make_seuratTools_clean_names()
 
         updateSelectizeInput(session, "varSelect", choices = formatted_col_names, selected = "batch")
     })

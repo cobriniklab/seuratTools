@@ -2,22 +2,22 @@
 % Please edit documentation in R/utils.R
 \name{read_project_db}
 \alias{read_project_db}
-\title{Read a database of chevreul projects}
+\title{Read a database of seuratTools projects}
 \usage{
 read_project_db(
   projects_dir = NULL,
-  cache_location = "~/.cache/chevreul",
+  cache_location = "~/.cache/seuratTools",
   sqlite_db = "single-cell-projects.db",
   verbose = TRUE
 )
 }
 \arguments{
-\item{cache_location}{Path to cache "~/.cache/chevreul"}
+\item{cache_location}{Path to cache "~/.cache/seuratTools"}
 
 \item{sqlite_db}{sqlite db}
 
 \item{verbose}{}
 }
 \description{
-Reads database of chevreul projects to a data frame
+Reads database of seuratTools projects to a data frame
 }

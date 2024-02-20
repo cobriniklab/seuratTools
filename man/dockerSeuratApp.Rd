@@ -10,7 +10,7 @@ dockerSeuratApp(
   appTitle = NULL,
   organism_type = "human",
   futureMb = 13000,
-  bigwig_db = "~/.cache/chevreul/bw-files.db"
+  bigwig_db = "~/.cache/seuratTools/bw-files.db"
 )
 }
 \arguments{

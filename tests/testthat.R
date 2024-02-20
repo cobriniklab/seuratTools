@@ -1,4 +1,4 @@
 library(testthat)
-library(chevreul)
+library(seuratTools)
 
-test_check("chevreul")
+test_check("seuratTools")

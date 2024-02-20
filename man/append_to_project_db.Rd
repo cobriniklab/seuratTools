@@ -2,18 +2,18 @@
 % Please edit documentation in R/utils.R
 \name{append_to_project_db}
 \alias{append_to_project_db}
-\title{Update a database of chevreul projects}
+\title{Update a database of seuratTools projects}
 \usage{
 append_to_project_db(
   new_project_path,
   projects_dir = NULL,
-  cache_location = "~/.cache/chevreul",
+  cache_location = "~/.cache/seuratTools",
   sqlite_db = "single-cell-projects.db",
   verbose = TRUE
 )
 }
 \arguments{
-\item{cache_location}{Path to cache "~/.cache/chevreul"}
+\item{cache_location}{Path to cache "~/.cache/seuratTools"}
 
 \item{sqlite_db}{sqlite db}
 
