@@ -7,7 +7,7 @@
 plotClustree(input, output, session, seu)
 }
 \arguments{
-\item{seu}{}
+\item{seu}{Seurat object}
 }
 \description{
 plot clustree server

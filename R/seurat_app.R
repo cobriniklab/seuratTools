@@ -269,8 +269,8 @@ seuratApp <- function(preset_project, appTitle = "seuratTools", organism_type = 
                 tabName = "coveragePlots", icon = icon("mountain")
             ), shinydashboard::menuItem("Differential Expression",
                 tabName = "diffex", icon = icon("magnet")
-                # ), shinydashboard::menuItem("Pathway Enrichment Analysis",
-                #   tabName = "pathwayEnrichment", icon = icon("sitemap")
+            ), shinydashboard::menuItem("Pathway Enrichment Analysis",
+              tabName = "pathwayEnrichment", icon = icon("sitemap")
             ), shinydashboard::menuItem("Find Markers",
                 tabName = "findMarkers", icon = icon("bullhorn")
             ), shinydashboard::menuItem("Subset Seurat Input",
@@ -387,13 +387,13 @@ seuratApp <- function(preset_project, appTitle = "seuratTools", organism_type = 
                 plotDimRedui("diffex"),
                 diffexui("diffex")
             ),
-            # shinydashboard::tabItem(
-            #   tabName = "pathwayEnrichment",
-            #   h2("Pathway Enrichment"),
-            #   fluidRow(
-            #     pathwayEnrichmentui("pathwayEnrichment")
-            #   )
-            # ),
+            shinydashboard::tabItem(
+              tabName = "pathwayEnrichment",
+              h2("Pathway Enrichment"),
+              fluidRow(
+                pathwayEnrichmentui("pathwayEnrichment")
+              )
+            ),
             shinydashboard::tabItem(
                 tabName = "regressFeatures",
                 fluidRow(
@@ -690,7 +690,7 @@ seuratApp <- function(preset_project, appTitle = "seuratTools", organism_type = 
             seu
         )
 
-        callModule(pathwayEnrichment, "pathwayEnrichment", seu, featureType)
+        callModule(pathwayEnrichment, "pathwayEnrichment", seu)
 
         subset_selected_cells <- callModule(
             tableSelected, "subset",

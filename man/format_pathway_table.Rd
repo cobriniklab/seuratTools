@@ -4,7 +4,7 @@
 \alias{format_pathway_table}
 \title{Title}
 \usage{
-format_pathway_table(enrich_by_cluster, cluster, db)
+format_pathway_table(enrich_by_cluster, enrich_cluster, enrich_db)
 }
 \arguments{
 \item{enrich_by_cluster}{}

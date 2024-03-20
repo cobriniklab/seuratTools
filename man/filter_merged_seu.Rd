@@ -9,8 +9,12 @@ filter_merged_seu(seu, filter_var, filter_val, .drop = .drop)
 \arguments{
 \item{seu}{A seurat object}
 
+\item{filter_var}{Variables to filter}
+
+\item{filter_val}{Values to filter}
+
 \item{.drop}{}
 }
 \description{
-Filter a Single Seurat Object
+Filters a seurat object, retaining all the desired values of a variable
 }

@@ -275,6 +275,10 @@ update_seuratTools_object <- function(seu_path, feature, resolution = seq(0.2, 2
         seu <- RenameAssays(seu, RNA = "gene")
     }
 
+    if(length(seu@project.name) > 1){
+      seu@project.name <- seu@project.name[[1]]
+    }
+
     seurat_version <- seu@misc$experiment$seurat_version
 
     if (packageVersion("Seurat") == "5.0.0" & (seurat_version < 5 || is.null(seurat_version))) {
@@ -728,4 +732,19 @@ convert_v3_to_v5 <- function(seu_v3) {
     }
 
     return(seu_v5)
+}
+
+
+convert_seurat_to_sce <- function(seu) {
+  sce <- as.SingleCellExperiment(seu, experiment = DefaultAssay(seu))
+
+  alt_exp_names <- Seurat::Assays(seu)[!Seurat::Assays(seu) == DefaultAssay(seu)]
+
+  for (i in alt_exp_names) {
+    altExp(sce, i) <- as.SingleCellExperiment(seu, experiment = i)
+  }
+
+  metadata(sce) <- seu@misc
+
+  return(sce)
 }

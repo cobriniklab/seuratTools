@@ -18,5 +18,5 @@ make_bigwig_db(
 \item{sqlite_db}{sqlite db containing bw files}
 }
 \description{
-Make Bigwig Database
+Build a database containg bigwig files
 }

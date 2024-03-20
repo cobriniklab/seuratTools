@@ -12,6 +12,8 @@ read_project_db(
 )
 }
 \arguments{
+\item{projects_dir}{Project directory containing seuratTools projects}
+
 \item{cache_location}{Path to cache "~/.cache/seuratTools"}
 
 \item{sqlite_db}{sqlite db}

@@ -13,6 +13,9 @@ combine_cols(seu, cols, new_col)
 
 \item{new_col}{New columns}
 }
+\value{
+A table with new metadata columns
+}
 \description{
 Reformat Seurat Object Metadata by Coalesced Columns
 }

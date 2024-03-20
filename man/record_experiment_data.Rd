@@ -13,10 +13,12 @@ record_experiment_data(
 \arguments{
 \item{object}{A seurat objet}
 
-\item{organism}{}
+\item{experiment_name}{Name of the experiment}
+
+\item{organism}{Organism}
 }
 \description{
-Record Experiment Metadata
+Record the technical metadata for the for a Seurat object
 }
 \examples{
 logged_seu <- record_experiment_data(human_gene_transcript_seu, experiment_name = "human_gene_transcript", organism = "mouse")

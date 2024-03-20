@@ -171,7 +171,7 @@ plotHeatmapui <- function(id) {
         seuratToolsBox(
             title = "Heatmap",
             uiOutput(ns("colAnnoVarui")),
-            radioButtons(ns("slot"), "Data Scaling", choices = c(scaled = "scale.data", unscaled = "data"), selected = "scale.data", inline = TRUE),
+            radioButtons(ns("layer"), "Data Scaling", choices = c(scaled = "scale.data", unscaled = "data"), selected = "scale.data", inline = TRUE),
             selectizeInput(ns("dendroSelect"), "Clustering algorithm or metadata for column arrangement", choices = NULL, selected = NULL, multiple = TRUE),
             actionButton(ns("actionHeatmap"), "Plot Heatmap"),
             downloadButton(ns("downloadPlot"), "Download Heatmap"),
@@ -251,7 +251,7 @@ plotHeatmap <- function(input, output, session, seu, featureType, organism_type)
             assay <- "gene"
         }
 
-        hm <- seu_complex_heatmap(seu(), features = input$customFeature, assay = assay, group.by = input$colAnnoVar, slot = input$slot, col_arrangement = input$dendroSelect)
+        hm <- seu_complex_heatmap(seu(), features = input$customFeature, assay = assay, group.by = input$colAnnoVar, layer = input$layer, col_arrangement = input$dendroSelect)
 
         hm <- ComplexHeatmap::draw(hm)
         return(hm)
@@ -1988,6 +1988,26 @@ pathwayEnrichmentui <- function(id) {
         title = "Enriched pathways by cluster",
         tagList(
             actionButton(ns("calcPathwayEnrichment"), "Calculate Pathway Enrichment"),
+            selectizeInput(ns("group_by"), "Metadata variable for enrichment calculation",   choices = NULL,
+                           selected = NULL,
+                           multiple = FALSE),
+            # selectizeInput(ns("database"),
+            #                "Database for ontology terms",
+            #                choices = c(
+            #                  "GO_Biological_Process_2018",
+            #                  "GO_Cellular_Component_2018",
+            #                  "GO_Molecular_Function_2018",
+            #                  "KEGG_2016",
+            #                  "WikiPathways_2016",
+            #                  "Reactome_2016",
+            #                  "Panther_2016",
+            #                  "Human_Gene_Atlas",
+            #                  "Mouse_Gene_Atlas"
+            #                ),
+            #                selected = "GO_Biological_Process_2018",
+            #                multiple = FALSE),
+
+
             uiOutput(ns("enriched_pathways_by_cluster_select_source_UI")),
             uiOutput(ns("enriched_pathways_by_cluster_UI"))
         ),
@@ -2005,8 +2025,13 @@ pathwayEnrichmentui <- function(id) {
 #' @export
 #'
 #' @examples
-pathwayEnrichment <- function(input, output, session, seu, featureType) {
+pathwayEnrichment <- function(input, output, session, seu) {
     ns <- session$ns
+
+    w <- waiter::Waiter$new(ns("enrichment"),
+                            html = waiter::spin_loaders(id = 1, color = "black", style = "position:relative;margin:auto;"),
+                            color = waiter::transparent(.5)
+    )
 
     ## ----------------------------------------------------------------------------##
     ## Tab: Enriched pathways
@@ -2016,17 +2041,24 @@ pathwayEnrichment <- function(input, output, session, seu, featureType) {
     ## Clusters.
     ## ----------------------------------------------------------------------------##
 
+    observe({
+      req(seu())
+
+      marker_group_bys <- names(Misc(seu())$markers) %>%
+        make_seuratTools_clean_names()
+
+      updateSelectizeInput(session, "group_by", choices = marker_group_bys, selected = "batch", server = TRUE)
+    })
+
     enriched_pathways <- eventReactive(input$calcPathwayEnrichment, {
         req(seu())
-        if (featureType() == "gene") {
-            enriched_seu <- tryCatch(getEnrichedPathways(seu()), error = function(e) e)
+            enriched_seu <- tryCatch(getEnrichedPathways(seu(), column_cluster = input$group_by), error = function(e) e)
             enrichr_available <- !any(class(enriched_seu) == "error")
             if (enrichr_available) {
                 seu <- enriched_seu
             }
-        }
 
-        seu()@misc$enriched_pathways
+        seu@misc$enriched_pathways
     })
 
     # UI element: choose source for pathway enrichement results (currently Enrichr or GSVA)

@@ -7,7 +7,7 @@
 convert_seu_list_to_multimodal(seu_list)
 }
 \arguments{
-\item{seu_list}{}
+\item{seu_list}{A seurat list}
 }
 \description{
 convert seurat list to multimodal object

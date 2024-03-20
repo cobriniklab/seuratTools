@@ -7,8 +7,12 @@
 filter_rows_to_top(df, column, values)
 }
 \arguments{
-\item{values}{}
+\item{df}{A data frame}
+
+\item{column}{Column containing the values of choice}
+
+\item{values}{Values to be filtered to the top}
 }
 \description{
-Filter Rows to Top
+Filter rows that match the desired value to the top.
 }

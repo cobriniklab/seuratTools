@@ -7,7 +7,7 @@
 list_plot_types(seu)
 }
 \arguments{
-\item{seu}{}
+\item{seu}{Seurat object}
 }
 \value{
 plot_types

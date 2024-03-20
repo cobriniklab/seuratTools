@@ -2,13 +2,15 @@
 % Please edit documentation in R/seurat_integrate.R
 \name{load_seurat_from_proj}
 \alias{load_seurat_from_proj}
-\title{Load Seurat Files from a signle project path}
+\title{Load Seurat Files from a single project path}
 \usage{
 load_seurat_from_proj(proj_dir, ...)
 }
 \arguments{
+\item{proj_dir}{Path to project}
+
 \item{...}{}
 }
 \description{
-Load Seurat Files from a signle project path
+Load Seurat Files from a single project path
 }

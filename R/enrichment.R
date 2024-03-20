@@ -77,6 +77,7 @@
 #' original is out-of-service; defaults to
 #' 'http://amp.pharm.mssm.edu/Enrichr/enrich'.
 #' @export
+#' @importFrom formattable proportion
 #' @return Seurat object with Enrichr results for samples and clusters stored in
 #' object@misc$enriched_pathways$enrichr
 #' @import dplyr
@@ -138,8 +139,8 @@ getEnrichedPathways <- function(object,
     ## - try up to three times to run enrichR annotation (fails sometimes)
     ## - filter results
     ## --------------------------------------------------------------------------##
-    if (!is.null(object@misc$markers[[1]]$presto)) {
-        if (is.data.frame(object@misc$markers[[1]]$presto)) {
+    if (!is.null(object@misc$markers[[column_cluster]]$presto)) {
+        if (is.data.frame(object@misc$markers[[column_cluster]]$presto)) {
             message(
                 paste0(
                     "[", format(Sys.time(), "%H:%M:%S"),
@@ -148,8 +149,9 @@ getEnrichedPathways <- function(object,
             )
 
             ## remove clusters for which no marker genes were found
-            markers_by_cluster <- object@misc$markers[[1]]$presto %>%
-                # dplyr::filter(padj < 0.05) %>%
+            markers_by_cluster <- object@misc$markers[[column_cluster]]$presto %>%
+                dplyr::filter(Adjusted.pvalue <= 0.05) %>%
+              enframe_markers() %>%
                 identity()
 
             cluster_names <- names(markers_by_cluster)
@@ -278,14 +280,15 @@ getEnrichedPathways <- function(object,
 #'
 #' @return
 #' @export
+#' @importFrom formattable proportion
 #'
 #' @examples
-format_pathway_table <- function(enrich_by_cluster, cluster, db) {
+format_pathway_table <- function(enrich_by_cluster, enrich_cluster, enrich_db) {
     enrich_by_cluster <-
         enrich_by_cluster %>%
         dplyr::filter(
-            cluster == cluster,
-            db == db
+            cluster == enrich_cluster,
+            db == enrich_db
         ) %>%
         dplyr::select(3, 4, 5, 6, 10, 11) %>%
         dplyr::arrange(-Combined.Score) %>%

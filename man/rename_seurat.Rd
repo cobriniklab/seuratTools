@@ -12,5 +12,5 @@ rename_seurat(seu, new_name)
 \item{new_name}{New name to assign}
 }
 \description{
-Give a new project name to a seurat object
+Function to assign new project name to a Seurat object
 }
