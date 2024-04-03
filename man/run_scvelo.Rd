@@ -7,7 +7,7 @@
 run_scvelo(
   seu,
   loom_path,
-  assay = "gene",
+  seurat_assay = "gene",
   fit.quantile = 0.05,
   check_loom = FALSE,
   ...

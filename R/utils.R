@@ -735,6 +735,14 @@ convert_v3_to_v5 <- function(seu_v3) {
 }
 
 
+#' convert seurat object to cds
+#'
+#' @param seu
+#'
+#' @return
+#' @export
+#'
+#' @examples
 convert_seurat_to_sce <- function(seu) {
   sce <- as.SingleCellExperiment(seu, experiment = DefaultAssay(seu))
 
