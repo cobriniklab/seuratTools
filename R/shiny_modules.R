@@ -113,7 +113,7 @@ plotViolin <- function(input, output, session, seu, featureType, organism_type) 
         req(prefill_feature())
         req(seu())
         updateSelectizeInput(session, "customFeature",
-            choices = rownames(seu()@assays[["gene"]]),
+            choices = unique(unlist(map(seu()@assays, rownames))),
             selected = prefill_feature(), server = TRUE
         )
     })

@@ -59,7 +59,7 @@ merge_small_seus <- function(seu_list, k.filter = 50) {
 
     seu_list <- seu_list[!seu_dims]
 
-    seu_list[[1]] <- purrr::reduce(c(small_seus, seu_list[[1]]), merge)
+    seu_list[[1]] <- purrr::reduce(c(small_seus, seu_list[[1]]), merge, merge.data = TRUE, merge.dr = TRUE)
 
     return(seu_list)
 }
@@ -88,6 +88,10 @@ seurat_integrate <- function(seu_list, method = "cca", organism = "human", ...) 
 
     seu_list <- merge_small_seus(seu_list)
 
+    if(length(seu_list) == 1){
+      return(seu_list[[1]])
+      }
+
     if (method == "rpca") {
         # scale and run pca for each separate batch in order to use reciprocal pca instead of cca
         features <- SelectIntegrationFeatures(object.list = seu_list)
@@ -104,7 +108,8 @@ seurat_integrate <- function(seu_list, method = "cca", organism = "human", ...) 
 
     # see https://github.com/satijalab/seurat/issues/6341------------------------------
     cells_per_batch <- sapply(seu_list, ncol)
-    min_k_weight <- min(cells_per_batch) - 1
+    min_k_weight <- min(cells_per_batch) - 15
+    # min_k_weight <- min(cells_per_batch) - 1
     min_k_weight <- ifelse(min_k_weight < 100, min_k_weight, 100)
 
     seu_list.integrated <- tryCatch(IntegrateData(anchorset = seu_list.anchors, dims = 1:30, k.weight = min_k_weight), error = function(e) e)
@@ -125,6 +130,8 @@ seurat_integrate <- function(seu_list, method = "cca", organism = "human", ...) 
     Idents(seu_list.integrated) <- "batch"
     seu_list.integrated[["batch"]] <- Idents(seu_list.integrated)
 
+    seu_list.integrated <- JoinLayers(seu_list.integrated, assay = "gene")
+
     # switch to integrated assay. The variable features of this assay are
     # automatically set during IntegrateData
     Seurat::DefaultAssay(object = seu_list.integrated) <- "integrated"
@@ -138,6 +145,75 @@ seurat_integrate <- function(seu_list, method = "cca", organism = "human", ...) 
     seu_list.integrated <- record_experiment_data(seu_list.integrated, experiment_name = "integrated", organism = organism)
 
     return(seu_list.integrated)
+}
+
+#' Batch Correct Multiple Seurat Objects
+#'
+#' @param seu_list List of two or more seurat objects
+#' @param method Default "cca"
+#' @param ...
+#'
+#' @return
+#' @export
+#'
+#' @examples
+seurat_v5_integrate <- function(seu, method = "cca", organism = "human", ...) {
+  # To construct a reference we will identify ‘anchors’ between the individual datasets. First, we split the combined object into a list, with each dataset as an element.
+
+  # Prior to finding anchors, we perform standard preprocessing (log-normalization), and identify variable features individually for each. Note that Seurat v3 implements an improved method for variable feature selection based on a variance stabilizing transformation ("vst")
+  seu[["integrated"]] <- split(seu[["gene"]], f = seu$batch)
+
+  DefaultAssay(seu) <- "integrated"
+
+  seu <- seurat_preprocess(seu, scale = TRUE)
+  seu <- seurat_reduce_dimensions(seu)
+
+  # see https://github.com/satijalab/seurat/issues/6341------------------------------
+  cells_per_batch <- table(seu$batch)
+  min_k_weight <- min(cells_per_batch) - 1
+  min_k_weight <- ifelse(min_k_weight < 100, min_k_weight, 100)
+
+  if (method == "rpca") {
+    seu.integrated <- IntegrateLayers(seu, method = RPCAIntegration,
+                           orig.reduction = "pca", new.reduction = "integrated.rpca",
+                           verbose = FALSE
+    )
+  } else if (method == "cca") {
+    seu.integrated <- IntegrateLayers(seu, method = CCAIntegration,
+      orig.reduction = "pca", new.reduction = "integrated.cca",
+      verbose = FALSE, k.weight = min_k_weight
+    ) |>
+      JoinLayers()
+  } else if (method == "harmony"){
+    seu.integrated <- IntegrateLayers(seu, method = HarmonyIntegration,
+                           orig.reduction = "pca", new.reduction = "umap",
+                           verbose = FALSE
+    )
+  }
+
+  seu.integrated <- FindNeighbors(seu.integrated, reduction = "integrated.cca", dims = 1:30)
+
+  seu.integrated <- RunUMAP(seu.integrated, reduction = "integrated.cca", dims = 1:30, reduction.name = "umap")
+
+  # Next, we identify anchors using the FindIntegrationAnchors function, which takes a list of Seurat objects as input.
+
+  # #stash batches
+  Idents(seu.integrated) <- "batch"
+  seu.integrated[["batch"]] <- Idents(seu.integrated)
+
+  # switch to integrated assay. The variable features of this assay are
+  # automatically set during IntegrateData
+  Seurat::DefaultAssay(object = seu.integrated) <- "integrated"
+
+  # # if not integrated with harmony run the standard workflow for visualization and clustering
+  # if (!"harmony" %in% names(seu.integrated@reductions)) {
+  #   seu.integrated <- Seurat::ScaleData(object = seu.integrated, verbose = FALSE)
+  #   seu.integrated <- seurat_reduce_dimensions(seu.integrated, ...)
+  # }
+
+  seu.integrated <- record_experiment_data(seu.integrated, experiment_name = "integrated", organism = organism)
+
+  return(seu.integrated)
 }
 
 
@@ -378,6 +454,14 @@ reintegrate_seu <- function(seu, feature = "gene", suffix = "", reduction = "pca
     experiment_name <- Misc(seu)$experiment$experiment_name
 
     seu <- Seurat::DietSeurat(seu, counts = TRUE, data = TRUE, scale.data = FALSE)
+
+    # if(is(seu@assays[[1]], "Assay5")){
+    #   seu <- seurat_v5_integration_pipeline(seu, feature = feature, suffix = suffix, algorithm = algorithm, ...)
+    # } else {
+    #   seus <- Seurat::SplitObject(seu, split.by = "batch")
+    #   seu <- seurat_integration_pipeline(seus, feature = feature, suffix = suffix, algorithm = algorithm, ...)
+    # }
+
     seus <- Seurat::SplitObject(seu, split.by = "batch")
     seu <- seurat_integration_pipeline(seus, feature = feature, suffix = suffix, algorithm = algorithm, ...)
 

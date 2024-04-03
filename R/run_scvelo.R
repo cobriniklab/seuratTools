@@ -11,7 +11,7 @@
 #' @export
 #'
 #' @examples
-run_scvelo <- function(seu, loom_path, assay = "gene", fit.quantile = 0.05, check_loom = FALSE, ...) {
+run_scvelo <- function(seu, loom_path, seurat_assay = "gene", fit.quantile = 0.05, check_loom = FALSE, ...) {
     # if(DefaultAssay(seu) == "SCT"){
     #   seu <-
     #     seu %>%
@@ -39,7 +39,7 @@ run_scvelo <- function(seu, loom_path, assay = "gene", fit.quantile = 0.05, chec
     sub_seu <- seu[, colnames(seu) %in% colnames(bm)]
 
     sub_seu@assays[names(bm@assays)] <- bm@assays
-    DefaultAssay(sub_seu) <- assay
+    DefaultAssay(sub_seu) <- seurat_assay
     sub_seu@misc$vel <- NULL
     sub_seu@misc[names(sub_seu@misc) == "experiment"] <- NULL
 
@@ -71,11 +71,14 @@ convert_to_h5ad <- function(seu, file_path) {
     h5seurat_path <- fs::path_ext_set(file_path, ".h5Seurat")
     message(h5seurat_path)
 
+    seu@assays[["integrated"]]$counts <- seu@assays[["gene"]]$counts[rownames(seu@assays[["integrated"]]$data),]
+
     for (assay in Seurat::Assays(seu)) {
       message(assay)
       # seu[[assay]] <- as(object = seu[[assay]], Class = "Assay")
       # add copy of "RNA"
-      seu[[assay]] <- CreateAssayObject(counts = seu[[assay]]$counts)
+
+      seu@assays[[assay]] <- CreateAssayObject(counts = seu[[assay]]$counts)
       # # remove original
       # seu[["RNA"]] <- NULL
     }

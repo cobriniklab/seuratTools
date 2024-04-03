@@ -119,35 +119,30 @@ stash_marker_features <- function(metavar, seu, seurat_assay, top_n = 200, p_val
     message(paste0("stashing presto markers for ", metavar))
 
     markers <- list()
-    markers$presto <-
-        presto::wilcoxauc(seu, metavar, seurat_assay = seurat_assay) %>%
-        dplyr::group_by(group) %>%
-        dplyr::filter(padj < p_val_cutoff) %>%
-        dplyr::top_n(n = top_n, wt = logFC) %>%
-        dplyr::arrange(group, desc(logFC)) %>%
-        dplyr::select(Gene.Name = feature, Average.Log.Fold.Change = logFC, Adjusted.pvalue = padj, avgExpr, Cluster = group)
 
-    # message(paste0("stashing genesorteR markers for ", metavar))
-    #
-    # markers$genesorteR <- tryCatch(
-    #   {
-    #     gs <- genesorteR::sortGenes(
-    #       Seurat::GetAssayData(seu, assay = seurat_assay, slot = "data"),
-    #       tidyr::replace_na(seu[[]][[metavar]], "NA")
-    #     )
-    #
-    #     pp <- genesorteR::getPValues(gs)
-    #
-    #     genesorter_table <- genesorteR::getTable(gs, pp, adjpval_cutoff = p_val_cutoff)
-    #
-    #   },
-    #   error = function(e) {
-    #     message(sprintf("Error in %s: %s", deparse(e[["call"]]), e[["message"]]))
-    #     NULL
-    #   },
-    #   finally = {
-    #   }
-    # )
+    Idents(seu) <- seu@meta.data[[metavar]]
+
+    DefaultAssay(seu) <- seurat_assay
+
+    # markers$presto <-
+    #   seu |>
+    #   JoinLayers() |>
+    #   Seurat::FindAllMarkers() %>%
+    #   tibble::rownames_to_column("feature") |>
+    #     dplyr::group_by(cluster) %>%
+    #     dplyr::filter(p_val_adj < p_val_cutoff) %>%
+    #     dplyr::top_n(n = top_n, wt = avg_log2FC) %>%
+    #     dplyr::arrange(cluster, desc(avg_log2FC)) %>%
+    #     dplyr::select(Gene.Name = feature, Average.Log.Fold.Change = avg_log2FC, Adjusted.pvalue = p_val_adj, Cluster = cluster) |>
+    #   identity()
+
+    markers$presto <-
+      presto::wilcoxauc(seu, metavar, seurat_assay = seurat_assay) %>%
+      dplyr::group_by(group) %>%
+      dplyr::filter(padj < p_val_cutoff) %>%
+      dplyr::top_n(n = top_n, wt = logFC) %>%
+      dplyr::arrange(group, desc(logFC)) %>%
+      dplyr::select(Gene.Name = feature, Average.Log.Fold.Change = logFC, Adjusted.pvalue = padj, avgExpr, Cluster = group)
 
     return(markers)
 }

@@ -69,6 +69,67 @@ seurat_integration_pipeline <- function(seu_list, resolution = seq(0.2, 2.0, by 
     return(integrated_seu)
 }
 
+#' Run Seurat Integration
+#'
+#' Run batch correction, followed by:
+#' 1) stashing of batches in metadata 'batch'
+#' 2) clustering with resolution 0.2 to 2.0 in increments of 0.2
+#' 3) saving to <proj_dir>/output/sce/<feature>_seu_<suffix>.rds
+#'
+#' @param suffix a suffix to be appended to a file save in output dir
+#' @param seu_list List of seurat objects to be integrated
+#' @param resolution Range of resolution
+#' @param algorithm Algorithm for modularity optimization. Default 1:original Louvain algorithm
+#' @param organism Default "human"
+#' @param ...
+#'
+#' @return
+#' @export
+#'
+#' @examples
+#'
+#' batches <- panc8 %>%
+#'     Seurat::SplitObject(split.by = "tech")
+#'
+#' integrated_seu <- seurat_integration_pipeline(batches)
+seurat_v5_integration_pipeline <- function(seu, resolution = seq(0.2, 2.0, by = 0.2), suffix = "", algorithm = 1, organism = "human", annotate_cell_cycle = FALSE, annotate_percent_mito = FALSE, reduction = "pca", ...) {
+
+  integrated_seu <- seurat_v5_integrate(seu, organism = organism, ...)
+
+  # cluster merged seurat objects
+  if ("harmony" %in% names(integrated_seu@reductions)) reduction <- "harmony"
+  integrated_seu <- seurat_cluster(integrated_seu, resolution = resolution, algorithm = algorithm, reduction = reduction, ...)
+
+
+  seurat_assay <- "gene"
+  if ("harmony" %in% names(integrated_seu@reductions)) seurat_assay <- "integrated"
+  integrated_seu <- find_all_markers(integrated_seu, seurat_assay = seurat_assay)
+
+  #   enriched_seu <- tryCatch(getEnrichedPathways(integrated_seu), error = function(e) e)
+  #   enrichr_available <- !any(class(enriched_seu) == "error")
+  #   if(enrichr_available){
+  #     integrated_seu <- enriched_seu
+  #   }
+
+  # add read count column
+  integrated_seu <- add_read_count_col(integrated_seu)
+
+  # annotate cell cycle scoring to seurat objects
+  if (annotate_cell_cycle) {
+    integrated_seu <- annotate_cell_cycle(integrated_seu, ...)
+  }
+
+  # annotate mitochondrial percentage in seurat metadata
+  if (annotate_percent_mito) {
+    integrated_seu <- add_percent_mito(integrated_seu, ...)
+  }
+
+  # annotate excluded cells
+  # integrated_seu <- annotate_excluded(integrated_seu, excluded_cells)
+
+  return(integrated_seu)
+}
+
 #' Run Seurat Pipeline
 #'
 #' This functions allows you to Preprocess, Cluster and Reduce Dimensions for a single seurat object.
