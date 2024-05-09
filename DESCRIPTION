@@ -29,7 +29,6 @@ Imports:
     DBI,
     dplyr,
     DT,
-    ensembldb,
     formattable,
     fs,
     future,
@@ -62,6 +61,7 @@ Imports:
     unglue,
     waiter
 Suggests: 
+    ensembldb,
     wiggleplotr (>= 1.13.1),
     scran,
     scater,
