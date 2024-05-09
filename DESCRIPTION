@@ -65,7 +65,7 @@ Suggests:
     wiggleplotr (>= 1.13.1),
     scran,
     scater,
-    velociraptor
+    velociraptor,
     ggplot2,
     knitr,
     monocle3 (>= 0.2.1),
