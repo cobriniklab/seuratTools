@@ -62,6 +62,7 @@ Imports:
     waiter
 Suggests: 
     ensembldb,
+    LoomExperiment,
     wiggleplotr (>= 1.13.1),
     scran,
     scater,
