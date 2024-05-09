@@ -91,6 +91,14 @@ find_all_markers <- function(seu, metavar = NULL, seurat_assay = "gene", ...) {
     return(seu)
 }
 
+#' Enframe seurat markers
+#'
+#' @param marker_table
+#'
+#' @return
+#' @export
+#'
+#' @examples
 enframe_markers <- function(marker_table) {
     marker_table %>%
         dplyr::select(Gene.Name, Cluster) %>%

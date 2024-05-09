@@ -864,10 +864,14 @@ seuratApp <- function(preset_project, appTitle = "seuratTools", organism_type = 
             )
         })
 
+        sce <- reactive({
+          req(seu())
+          convert_seurat_to_sce(seu())})
 
         observe({
             req(uploadSeuratPath())
-            req(seu())
+            req(sce())
+
 
             proj_path <- stringr::str_replace(uploadSeuratPath(), "output.*", "")
 
@@ -878,7 +882,7 @@ seuratApp <- function(preset_project, appTitle = "seuratTools", organism_type = 
             print(loom_path)
             # need to check if this file exists
 
-            callModule(plotVelocity, "plotvelocity", seu, loom_path)
+            callModule(plotVelocity, "plotvelocity", sce, loom_path)
         })
 
         callModule(techInfo, "techInfo", seu)

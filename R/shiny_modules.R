@@ -1314,212 +1314,129 @@ allTranscripts <- function(input, output, session, seu,
 
 #' RNA Velocity UI Module
 #'
-#' @param id
-#'
-#' @return
-#' @export
-#'
-#' @examples
+#' @noRd
 plotVelocityui <- function(id) {
-    ns <- NS(id)
-    tagList(
-        seuratToolsBox(
-            title = "Calculate Velocity",
-            width = 4,
-            textOutput(ns("velocityFlag")),
-            radioButtons(ns("velocityMode"), "Velocity Mode", choices = c("deterministic (velocyto)" = "deterministic", "stochastic" = "stochastic", "dynamical" = "dynamical")),
-            actionButton(ns("calc_velocity"), "calculate velocity"),
-            textOutput(ns("scveloMessages")),
-        ),
-        seuratToolsBox(
-            title = "Plot Veloctiy on Embedding",
-            width = 12,
-            selectizeInput(ns("embedding"), "dimensional reduction method",
-                choices = c("pca", "tsne", "umap"),
-                selected = "umap"
-            ),
-            selectizeInput(ns("varSelect"), "Color by Variable", choices = NULL, multiple = FALSE),
-            sliderInput(ns("resolution"), "Resolution of clustering algorithm (affects number of clusters)", min = 0.2, max = 2, step = 0.2, value = 0.6),
-            radioButtons(ns("plotFormat"), "velocity format", choices = c("arrow", "stream"), selected = "arrow", inline = TRUE),
-            actionButton(ns("plot_velocity_embedding"), "plot velocity on embedding"),
-            downloadButton(ns("downloadEmbeddingPlot"), label = "Download Plot"),
-            imageOutput(ns("velocityEmbeddingPlot"), height = "800px")
-        ),
-        seuratToolsBox(
-            title = "Plot Velocity and Expression",
-            width = 12,
-            selectizeInput(ns("geneSelect"), "Select a Gene", choices = NULL, selected = NULL, multiple = TRUE),
-            actionButton(ns("plot_velocity_expression"), "plot velocity and expression"),
-            downloadButton(ns("downloadExpressionPlot"), label = "Download Plot"),
-            imageOutput(ns("velocityExpressionPlot"), height = "500px")
-        ) %>%
-            default_helper(type = "markdown", content = "plotVelocity")
-    )
+  ns <- NS(id)
+  tagList(
+    seuratToolsBox(
+      title = "Calculate Velocity",
+      width = 4,
+      textOutput(ns("velocityFlag")),
+      radioButtons(ns("velocityMode"), "Velocity Mode", choices = c("deterministic (velocyto)" = "deterministic", "stochastic" = "stochastic", "dynamical" = "dynamical")),
+      actionButton(ns("calc_velocity"), "calculate velocity"),
+      textOutput(ns("scveloMessages")),
+    ),
+    seuratToolsBox(
+      title = "Plot Veloctiy on Embedding",
+      width = 12,
+      selectizeInput(ns("embedding"), "dimensional reduction method",
+                     choices = c("PCA", "TSNE", "UMAP"),
+                     selected = "UMAP"
+      ),
+      selectizeInput(ns("varSelect"), "Color by Variable", choices = NULL, multiple = FALSE),
+      sliderInput(ns("resolution"), "Resolution of clustering algorithm (affects number of clusters)", min = 0.2, max = 2, step = 0.2, value = 0.6),
+      radioButtons(ns("plotFormat"), "velocity format", choices = c("arrow", "stream"), selected = "arrow", inline = TRUE),
+      actionButton(ns("plot_velocity_embedding"), "plot velocity on embedding"),
+      # downloadButton(ns("downloadEmbeddingPlot"), label = "Download Plot"),
+      plotOutput(ns("velocityEmbeddingPlot"), height = "800px")
+    ),
+    seuratToolsBox(
+      title = "Plot Velocity and Expression",
+      width = 12,
+      selectizeInput(ns("geneSelect"), "Select a Gene", choices = NULL, selected = NULL, multiple = TRUE),
+      actionButton(ns("plot_velocity_expression"), "plot velocity and expression"),
+      # downloadButton(ns("downloadExpressionPlot"), label = "Download Plot"),
+      plotOutput(ns("velocityExpressionPlot"), height = "500px")
+    ) %>%
+      default_helper(type = "markdown", content = "plotVelocity")
+  )
 }
 
 #' RNA Velocity Server Module
 #'
-#' @param input
-#' @param output
-#' @param session
-#' @param seu
-#' @param loom_path
+#' @param object a SingleCellExperiment object
+#' @param loom_path path to a loom file
 #'
-#' @return
-#' @export
-#'
-#' @examples
-plotVelocity <- function(input, output, session, seu, loom_path) {
-    ns <- session$ns
+#' @noRd
+plotVelocity <- function(input, output, session, object, loom_path) {
+  ns <- session$ns
 
-    print("running scvelo")
+  message("running scvelo")
 
-    observe({
-        req(seu())
-        updateSelectizeInput(session, "varSelect", choices = colnames(seu()[[]]), selected = "gene_snn_res.0.2", server = TRUE)
-    })
+  observe({
+    req(object())
+    updateSelectizeInput(session, "varSelect", choices = colnames(colData(object())), selected = "batch", server = TRUE)
+    updateSelectizeInput(session, "geneSelect", choices = rownames(object()), selected = "NRL", server = TRUE)
+  })
 
-    observe({
-      req(adata())
-      updateSelectizeInput(session, "geneSelect", choices = rownames(adata()$var), selected = rownames(adata()$var)[[1]], server = TRUE)
-    })
+  # reactive val adata ------------------------------
 
-    # reactive val adata ------------------------------
+  loom_object <- reactiveVal()
 
-    adata <- reactiveVal()
+  observeEvent(input$calc_velocity, {
+    req(object())
+    withCallingHandlers(
+      {
+        html("scveloMessages", "")
+        message("Beginning")
 
-    observeEvent(input$calc_velocity, {
-        req(seu())
-        withCallingHandlers(
-            {
-                shinyjs::html("scveloMessages", "")
-                message("Beginning")
-
-                if ("integrated" %in% names(seu()@assays)) {
-                    assay <- "integrated"
-                } else {
-                    assay <- "gene"
-                }
-
-                adata <- prep_scvelo(seu(), loom_path, velocity_mode = input$velocityMode)
-
-                adata(adata)
-                message("scvelo Complete!")
-            },
-            message = function(m) {
-                shinyjs::html(id = "scveloMessages", html = paste0("Running scvelo: ", m$message), add = FALSE)
-            }
-        )
-    })
-
-
-    velocity_flag <- eventReactive(input$calc_velocity, {
-        req(adata())
-        "Velocity Calculated for this dataset"
-    })
-
-    output$velocityFlag <- renderText({
-        req(adata())
-        velocity_flag()
-    })
-
-    observe({
-        req(adata())
-
-        if ("integrated" %in% names(seu()@assays)) {
-            assay <- "integrated"
+        if (query_experiment(object(), "integrated")) {
+          experiment <- "integrated"
         } else {
-            assay <- "gene"
+          experiment <- "gene"
         }
 
-        cluster_resolution <- paste0(assay, "_snn_res.", input$resolution)
+        loom_object <- merge_loom(object(), loom_path)
 
-        plot_scvelo(adata(), group.by = input$varSelect, plot_method = input$plotFormat)
-        fig <- pyplot$gcf()
-        # fig$savefig("velocity_embedding.pdf")
-        fig$savefig("velocity_embedding.svg")
-    })
-
-    observe({
-        req(adata())
-        req(input$geneSelect)
-
-        if ("integrated" %in% names(seu()@assays)) {
-            assay <- "integrated"
-        } else {
-            assay <- "gene"
-        }
-        scvelo_expression(adata(), features = input$geneSelect)
-
-        fig <- pyplot$gcf()
-        # fig$savefig("velocity_expression.pdf")
-        fig$savefig("velocity_expression.svg")
-    })
-
-    output$downloadEmbeddingPlot <- downloadHandler(
-        filename = function() {
-            paste("velocity_embedding", ".svg", sep = "")
-        },
-        content = function(file) {
-            file.copy("velocity_embedding.svg", file, overwrite = TRUE)
-        }
+        loom_object(loom_object)
+        message("scvelo Complete!")
+      },
+      message = function(m) {
+        html(id = "scveloMessages", html = paste0("Running scvelo: ", m$message), add = FALSE)
+      }
     )
+  })
 
-    output$downloadExpressionPlot <- downloadHandler(
-        filename = function() {
-            paste("velocity_expression", ".svg", sep = "")
-        },
-        content = function(file) {
-            file.copy("velocity_expression.svg", file, overwrite = TRUE)
-        }
-    )
 
-    expression_path <- eventReactive(input$plot_velocity_expression, {
-        "velocity_expression.svg"
-    })
+  velocity_flag <- eventReactive(input$calc_velocity, {
+    req(loom_object())
+    "Velocity Calculated for this dataset"
+  })
 
-    embedding_path <- eventReactive(input$plot_velocity_embedding, {
-        "velocity_embedding.svg"
-    })
+  output$velocityFlag <- renderText({
+    req(loom_object())
+    velocity_flag()
+  })
 
-    output$velocityEmbeddingPlot <- renderImage(
-        {
-            # req(velocityExpressionPlot())
-            # Get width and height of image output
-            width <- session$clientData$output_image_width
-            height <- session$clientData$output_image_height
 
-            # Return a list containing information about the image
-            list(
-                src = embedding_path(),
-                contentType = "image/svg+xml",
-                width = 1200,
-                height = 800,
-                alt = "This is alternate text"
-            )
-        },
-        deleteFile = FALSE
-    )
+  velocityEmbeddingPlot <- eventReactive(input$plot_velocity_embedding, {
+    req(loom_object())
+    req(input$varSelect)
 
-    output$velocityExpressionPlot <- renderImage(
-        {
-            # req(velocityExpressionPlot())
-            # Get width and height of image output
-            width <- session$clientData$output_image_width
-            height <- session$clientData$output_image_height
+    plot_scvelo(loom_object(), colour_by = input$varSelect, embedding = input$embedding)
+  })
 
-            # Return a list containing information about the image
-            list(
-                src = expression_path(),
-                contentType = "image/svg+xml",
-                width = 1500,
-                height = 500,
-                alt = "This is alternate text"
-            )
-        },
-        deleteFile = FALSE
-    )
+  output$velocityEmbeddingPlot <- renderPlot({
+    velocityEmbeddingPlot()
+  })
+
+  velocityExpressionPlot <- eventReactive(input$plot_velocity_expression, {
+    req(loom_object())
+    req(input$geneSelect)
+
+    if (query_experiment(object(), "integrated")) {
+      experiment <- "integrated"
+    } else {
+      experiment <- "gene"
+    }
+    scvelo_expression(loom_object(), colour_by = input$varSelect, embedding = input$embedding)
+  })
+
+  output$velocityExpressionPlot <- renderPlot({
+    velocityExpressionPlot()
+  })
 }
+
 
 
 #' Monocle UI Module

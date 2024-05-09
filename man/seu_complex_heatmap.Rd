@@ -15,6 +15,7 @@ seu_complex_heatmap(
   column_split = NULL,
   col_arrangement = "ward.D2",
   mm_col_dend = 30,
+  embedding = "pca",
   ...
 )
 }
@@ -34,6 +35,8 @@ seu_complex_heatmap(
 \item{...}{additional arguments passed to ComplexHeatmap::Heatmap}
 
 \item{object}{A Seurat object}
+
+\item{emedding}{for column dendrogram}
 }
 \description{
 Plot Annotated Complexheatmap from Seurat object

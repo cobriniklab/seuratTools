@@ -1,180 +1,141 @@
-#' scvelo_assay
+#' Query Assay
 #'
-#' run scvelo on a gene or transcript level seurat object
+#' @param object a SingleCellExperiment object
+#' @param experiment an experiment name
 #'
-#' @param seu a seurat object
-#' @param loom_path path to matching loom file
-#' @param fit.quantile
-#' @param ...
-#'
-#' @return
-#' @export
-#'
-#' @examples
-run_scvelo <- function(seu, loom_path, seurat_assay = "gene", fit.quantile = 0.05, check_loom = FALSE, ...) {
-    # if(DefaultAssay(seu) == "SCT"){
-    #   seu <-
-    #     seu %>%
-    #     Seurat::FindVariableFeatures(nfeatures= 3000)
-    # }
-
-    ldat <- SeuratWrappers::ReadVelocity(file = loom_path)
-
-    for (assay in names(ldat)) {
-        colnames(ldat[[assay]]) <- str_replace(colnames(ldat[[assay]]), ".*:", "")
-        colnames(ldat[[assay]]) <- str_replace(colnames(ldat[[assay]]), "x$", "-1")
-    }
-
-    ldat <- map(ldat, ~{.x[rownames(.x) %in% rownames(seu), ]})
-    ldat <- map(ldat, ~{.x[!duplicated(rownames(.x)),]})
-    bm <- Seurat::as.Seurat(x = ldat)
-
-    # bm[[assay]] <- bm[["spliced"]]
-
-    # subset bm by seurat object.size
-    colnames(bm) <- str_remove(colnames(bm), '_Aligned.sortedByCoord.out.bam')
-    bm <- bm[, colnames(bm) %in% colnames(seu)]
-
-    # subset seurat object by ldat
-    sub_seu <- seu[, colnames(seu) %in% colnames(bm)]
-
-    sub_seu@assays[names(bm@assays)] <- bm@assays
-    DefaultAssay(sub_seu) <- seurat_assay
-    sub_seu@misc$vel <- NULL
-    sub_seu@misc[names(sub_seu@misc) == "experiment"] <- NULL
-
-    # sub_seu <- SeuratObject::RenameAssays(sub_seu, gene = "RNA")
-
-    h5ad_path <- stringr::str_replace(loom_path, ".loom", ".h5ad")
-
-    # sceasy::convertFormat(sub_seu, from="seurat", to="anndata",
-    #                       outFile=fs::path_expand(h5ad_path))
-
-    convert_to_h5ad(sub_seu, file_path = loom_path)
-
-    return(sub_seu)
-}
-
-#' convert a seurat object to an on-disk anndata object
-#'
-#' @param seu A seurat object
-#' @param file_path Path to file
-#'
-#' @return
+#' @return logical scalar indicating if experiment is present in object
 #' @export
 #'
 #' @examples
 #'
-#' convert_to_h5ad(human_gene_transcript_seu, "inst/extdata/seu.rds")
-#'
-convert_to_h5ad <- function(seu, file_path) {
-    h5seurat_path <- fs::path_ext_set(file_path, ".h5Seurat")
-    message(h5seurat_path)
-
-    seu@assays[["integrated"]]$counts <- seu@assays[["gene"]]$counts[rownames(seu@assays[["integrated"]]$data),]
-
-    for (assay in Seurat::Assays(seu)) {
-      message(assay)
-      # seu[[assay]] <- as(object = seu[[assay]], Class = "Assay")
-      # add copy of "RNA"
-
-      seu@assays[[assay]] <- CreateAssayObject(counts = seu[[assay]]$counts)
-      # # remove original
-      # seu[["RNA"]] <- NULL
-    }
-
-    SeuratDisk::SaveH5Seurat(seu, filename = h5seurat_path, overwrite = TRUE)
-
-    h5ad_path <- fs::path_ext_set(file_path, ".h5ad")
-
-    message(h5ad_path)
-    SeuratDisk::Convert(h5seurat_path, dest = h5ad_path, overwrite = TRUE)
+#' chevreul_sce <- chevreuldata::human_gene_transcript_sce()
+#' query_experiment(chevreul_sce, "gene")
+query_experiment <- function(object, experiment) {
+  return(experiment %in% c(mainExpName(object), altExpNames(object)))
 }
+
+
 
 #' scvelo_assay
 #'
-#' run scvelo on a gene or transcript level seurat object
+#' run scvelo on a gene or transcript level object
 #'
-#' @param seu a seurat object
+#' @param object a object
 #' @param loom_path path to matching loom file
-#' @param group.by metadata to color plot
-#' @param plot_method plotting method to use from scvelo
-#' @param ...
+#' @param assay gene
+#' @param fit.quantile how to fit velocity
+#' @param check_loom FALSE
 #'
-#' @return
+#' @return a SingleCellExperiment object with RNA velocity calculated
 #' @export
-#'
-#' @examples
-prep_scvelo <- function(seu, loom_path, velocity_mode = c("deterministic", "stochastic", "dynamical"), ...) {
-    h5ad_path <- fs::path_ext_set(loom_path, ".h5ad")
-    message(h5ad_path)
-    adata_matches_seu <- function(seu, adata) {
-        identical(sort(adata$obs_names$values), sort(colnames(seu)))
-    }
+#' @importFrom LoomExperiment import
+#' @examples \donttest{
+#' chevreul_sce <- chevreuldata::human_gene_transcript_sce()
+#' merge_loom(chevreul_sce, "my.loom")
+#' }
+merge_loom <- function(object, loom_path, assay = "gene", fit.quantile = 0.05, check_loom = FALSE) {
+  loom_object <- import(loom_path, type = "SingleCellLoomExperiment", colnames_attr = "CellID", rownames_attr = "Gene")
 
-    if (fs::file_exists(h5ad_path)) {
-        adata <- scvelo$read(fs::path_expand(h5ad_path))
+  colnames(loom_object) <- str_remove(colnames(loom_object), '_Aligned.sortedByCoord.out.bam')
+  colnames(loom_object) <- str_remove(colnames(loom_object), '.*:')
 
-        if (!adata_matches_seu(seu, adata)) {
-            seu <- run_scvelo(seu, loom_path, ...)
-        }
-    } else {
-        seu <- run_scvelo(seu, loom_path, ...)
-    }
+  loom_object <- loom_object[, colnames(loom_object) %in% colnames(object)]
 
-    adata <- scvelo$read(fs::path_expand(h5ad_path))
-    # reticulate::source_python("scripts/rename_raw.py")
-    # adata$raw$var$rename(columns = list('_index' = 'symbol'), inplace = True)
+  object <- object[, colnames(object) %in% colnames(loom_object)]
 
-    scvelo$pp$filter_and_normalize(adata, min_shared_counts = 20L, n_top_genes = 2000L)
+  loom_object <- loom_object[, colnames(object)]
 
-    scvelo$pp$moments(adata, n_pcs = 30L, n_neighbors = 30L)
+  altExp(object, "velocity") <- loom_object
 
-    if (velocity_mode == "dynamical") {
-        if (!"recover_dynamics" %in% adata$uns_keys()) {
-            scvelo$tl$recover_dynamics(adata)
-            reticulate::py_del_attr(adata, "raw")
-            adata$write_h5ad(h5ad_path)
-        }
-        scvelo$tl$latent_time(adata)
-    }
-
-    scvelo$tl$velocity(adata, mode = velocity_mode)
-
-    scvelo$tl$velocity_graph(adata)
-
-
-    return(adata)
+  return(object)
 }
 
-#' Plot scvelo on embedding plot
+#' plot scvelo
 #'
-#' @param adata
-#' @param group.by
-#' @param plot_method
+#' run scvelo on a gene or transcript level object
 #'
-#' @return
+#' @param object a object
+#' @param mode deterministic, stochastic, or dynamical
+#' @param embedding UMAP, PCA or TSNE
+#' @param ... extra args passed to run_scvelo
+#'
+#' @return a SingleCellExperiment object with velocity calculated
 #' @export
-#'
 #' @examples
-plot_scvelo <- function(adata, group.by = "batch", basis = "umap", plot_method = c("stream", "arrow", "dynamics"), ...) {
-    num_cols <- length(unique(adata$obs[[group.by]]))
+#' chevreul_sce <- chevreuldata::human_gene_transcript_sce()
+#' plot_scvelo(chevreul_sce, embedding = "UMAP", color_by = "velocity_pseudotime")
+plot_scvelo <- function(object, mode = c("steady_state", "deterministic", "stochastic", "dynamical"), embedding = c("UMAP", "PCA", "TSNE"), ...) {
+  embedding <- match.arg(embedding)
+  original_exp <- mainExpName(object)
 
-    mycols <- scales::hue_pal()(num_cols)
+  object <- swapAltExp(object, "velocity")
 
-    if (plot_method == "stream") {
-        scvelo$pl$velocity_embedding_stream(adata, basis = basis, palette = mycols, color = group.by, dpi = 200, figsize = c(20, 12), ...)
-    } else if (plot_method == "arrow") {
-        scvelo$pl$velocity_embedding(adata, basis = basis, palette = mycols, color = group.by, arrow_length = 3, arrow_size = 2, dpi = 200, figsize = c(20, 12), ...)
-    } else if (plot_method == "dynamics") {
-        scvelo$pl$scatter(adata, color = "latent_time", color_map = "gnuplot", figsize = c(20, 12), dpi = 200, ...)
-    }
+  object <- logNormCounts(object, assay.type = 1)
 
-    # pyplot$show()
+  dec <- scran::modelGeneVar(object, block = NULL)
+  top.hvgs <- getTopHVGs(dec, n = 5000)
+
+  velo.out <- scvelo(object, subset.row = top.hvgs, assay.X = "spliced", mode = mode)
+
+  object$velocity_pseudotime <- velo.out$velocity_pseudotime
+
+  object <- swapAltExp(object, original_exp)
+
+  embedded <- embedVelocity(reducedDim(object, embedding), velo.out)
+  grid.df <- gridVectors(reducedDim(object, embedding), embedded, resolution = 100)
+
+  colnames(grid.df) <- c("x", "y", "xend", "yend")
+
+  umap_plot <- plotReducedDim(object, dimred = embedding, ...) +
+    geom_segment(data = grid.df, mapping = aes(
+      x = x, y = y,
+      xend = xend, yend = yend
+    ), arrow = arrow(length = unit(0.05, "inches")))
+
+  return(umap_plot)
 }
 
-scvelo_expression <- function(adata, features = c("RXRG")) {
-    scvelo$pl$velocity(adata, var_names = features, figsize = c(10, 10), dpi = 200)
+#' plot  scvelo expression
+#'
+#' run scvelo on a gene or transcript level object
+#'
+#' @param object a object
+#' @param mode deterministic, stochastic, or dynamical
+#' @param embedding UMAP, PCA or TSNE
+#' @param ... extra args passed to run_scvelo
+#'
+#' @return a SingleCellExperiment object with velocity calculated
+#' @export
+#' @examples
+#' chevreul_sce <- chevreuldata::human_gene_transcript_sce()
+#' scvelo_expression(chevreul_sce, embedding = "UMAP", color_by = "velocity_pseudotime")
+scvelo_expression <- function(object, mode = c("steady_state", "deterministic", "stochastic", "dynamical"), embedding = c("UMAP", "PCA", "TSNE"), ...) {
+  embedding <- match.arg(embedding)
+  original_exp <- mainExpName(object)
 
-    # pyplot$show()
+  object <- swapAltExp(object, "velocity")
+
+  object <- logNormCounts(object, assay.type = 1)
+
+  dec <- modelGeneVar(object)
+  top.hvgs <- getTopHVGs(dec, n = 2000)
+
+  velo.out <- scvelo(object, subset.row = top.hvgs, assay.X = "spliced", mode = mode)
+
+  object$velocity_pseudotime <- velo.out$velocity_pseudotime
+
+  object <- swapAltExp(object, original_exp)
+
+  embedded <- embedVelocity(reducedDim(object, embedding), velo.out)
+  grid.df <- gridVectors(reducedDim(object, embedding), embedded)
+
+  colnames(grid.df) <- c("x", "y", "xend", "yend")
+
+  umap_plot <- plotReducedDim(object, dimred = embedding, ...) +
+    geom_segment(data = grid.df, mapping = aes(
+      x = x, y = y,
+      xend = xend, yend = yend
+    ), arrow = arrow(length = unit(0.05, "inches")))
+
+  return(umap_plot)
 }

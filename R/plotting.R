@@ -635,6 +635,7 @@ plot_readcount <- function(seu, metavar = "nCount_RNA", color.by = "batch", ysca
 #' @param col_arrangement how to arrange columns whether with a dendrogram (Ward.D2, average, etc.) or exclusively by metadata category
 #' @param column_split whether to split columns by metadat value
 #' @param mm_col_dend height of column dendrogram
+#' @param emedding for column dendrogram
 #' @param ... additional arguments passed to ComplexHeatmap::Heatmap
 #'
 #' @return
@@ -648,7 +649,7 @@ plot_readcount <- function(seu, metavar = "nCount_RNA", color.by = "batch", ysca
 #'
 seu_complex_heatmap <- function(seu, features = NULL, group.by = "ident", cells = NULL,
     layer = "scale.data", assay = NULL, group.bar.height = 0.01,
-    column_split = NULL, col_arrangement = "ward.D2", mm_col_dend = 30, ...) {
+    column_split = NULL, col_arrangement = "ward.D2", mm_col_dend = 30, embedding = "pca", ...) {
     if (length(GetAssayData(seu, layer = "scale.data")) == 0) {
         message("seurat object has not been scaled. Please run `Seurat::ScaleData` to view a scaled heatmap; showing unscaled expression data")
         layer <- "data"
@@ -697,11 +698,11 @@ seu_complex_heatmap <- function(seu, features = NULL, group.by = "ident", cells 
     ))) {
         if ("pca" %in% Seurat::Reductions(seu)) {
             cluster_columns <-
-                Seurat::Embeddings(seu, "pca") %>%
+                Seurat::Embeddings(seu, embedding) %>%
                 dist() %>%
                 hclust(col_arrangement)
         } else {
-            message("pca not computed for this dataset; cells will be clustered by displayed features")
+            message(glue("{embedding} not computed for this dataset; cells will be clustered by displayed features"))
             cluster_columns <- function(m) as.dendrogram(cluster::agnes(m), method = col_arrangement)
         }
     } else {

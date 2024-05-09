@@ -61,8 +61,11 @@ Imports:
     tidyr,
     unglue,
     waiter,
-    wiggleplotr (>= 1.13.1)
+    scran,
+    scater,
+    velociraptor
 Suggests: 
+    wiggleplotr (>= 1.13.1),
     ggplot2,
     knitr,
     monocle3 (>= 0.2.1),

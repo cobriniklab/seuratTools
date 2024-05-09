@@ -735,6 +735,8 @@ convert_v3_to_v5 <- function(seu_v3) {
 }
 
 
+
+
 #' convert seurat object to cds
 #'
 #' @param seu
@@ -744,12 +746,12 @@ convert_v3_to_v5 <- function(seu_v3) {
 #'
 #' @examples
 convert_seurat_to_sce <- function(seu) {
-  sce <- as.SingleCellExperiment(seu, experiment = DefaultAssay(seu))
+  sce <- as.SingleCellExperiment(seu, assay = DefaultAssay(seu))
 
   alt_exp_names <- Seurat::Assays(seu)[!Seurat::Assays(seu) == DefaultAssay(seu)]
 
   for (i in alt_exp_names) {
-    altExp(sce, i) <- as.SingleCellExperiment(seu, experiment = i)
+    altExp(sce, i) <- as.SingleCellExperiment(seu, assay = i)
   }
 
   metadata(sce) <- seu@misc
