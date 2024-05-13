@@ -346,8 +346,8 @@ seurat_reduce_dimensions <- function(seu, assay = "gene", reduction = "pca", leg
     }
 
     if ((ncol(seu) - 1) > 3 * 30) {
-        seu <- Seurat::RunTSNE(object = seu, assay = assay, reduction = reduction, dims = 1:30)
-        seu <- Seurat::RunUMAP(object = seu, assay = assay, reduction = reduction, dims = 1:30)
+        seu <- Seurat::RunTSNE(object = seu, assay = assay, reduction = reduction, dims = 1:30, check_duplicates = FALSE)
+        seu <- Seurat::RunUMAP(object = seu, assay = assay, reduction = reduction, dims = 1:30, check_duplicates = FALSE)
     }
 
     return(seu)
