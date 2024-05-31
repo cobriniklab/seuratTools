@@ -59,13 +59,13 @@ Imports:
     SingleCellExperiment,
     tidyr,
     unglue,
-    waiter
-Suggests: 
+    waiter,
     ensembldb,
     LoomExperiment,
     wiggleplotr (>= 1.13.1),
     scran,
-    scater,
+    scater
+Suggests: 
     velociraptor,
     ggplot2,
     knitr,
