@@ -113,9 +113,9 @@ myseu <- CreateSeuratObject(human_count, assay = "gene", meta.data = human_meta)
 
 ## Preprocess the seurat object
 
-seuratTools includes a handy function to preprocess the data that handles
-normalization and scaling required for downstream analysis. If needed,
-parameters can be specified by the user.
+seuratTools includes a handy function to preprocess the data that
+handles normalization and scaling required for downstream analysis. If
+needed, parameters can be specified by the user.
 
 ``` r
 myseu <- seurat_preprocess(myseu)

@@ -15,7 +15,6 @@ knitr::opts_chunk$set(
 )
 ```
 
-
 # seuratTools
 
 This package includes a set of Shiny apps for exploring single cell RNA datasets processed with <a href="https://github.com/satijalab/seurat" target="_blank" rel="noopener noreferrer">Seurat</a>
