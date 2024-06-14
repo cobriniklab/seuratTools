@@ -8,6 +8,7 @@ seuratApp(
   preset_project,
   appTitle = "seuratTools",
   organism_type = "human",
+  bigwig_db = "~/.cache/seuratTools/bw-files.db",
   db_path = "~/.cache/seuratTools/single-cell-projects.db",
   futureMb = 13000
 )

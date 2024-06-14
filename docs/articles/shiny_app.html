@@ -8,8 +8,8 @@
 <meta name="description" content="seuratTools">
 <title>Shiny App • seuratTools</title>
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="../deps/bootstrap-5.2.2/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.2.2/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
+<link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- bootstrap-toc --><script src="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@v1.0.1/dist/bootstrap-toc.min.js" integrity="sha256-4veVQbu7//Lk5TSmc7YV48MxtMy98e26cf5MrgZYnwo=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Shiny App">
 <meta property="og:description" content="seuratTools">
@@ -26,7 +26,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">seuratTools</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.6.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -106,12 +106,13 @@ using a built-in spreadsheet tool.</p>
 <div class="section level4">
 <h4 id="dimensional-reduction-plots">Dimensional reduction plots<a class="anchor" aria-label="anchor" href="#dimensional-reduction-plots"></a>
 </h4>
-<p>seuratTools provides visualization of embeddings in PCA, tSNE, and UMAP
-for scRNAseq data summarized at the gene and transcript level. Plots can
-be customized to display cell metadata and the results of community
-detection clustering by Louvain or Leiden algorithms as implemented in
-Seurat. In addition, gene and transcript feature expression can be
-overlaid on embedding plots both at the gene and transcript level.</p>
+<p>seuratTools provides visualization of embeddings in PCA, tSNE, and
+UMAP for scRNAseq data summarized at the gene and transcript level.
+Plots can be customized to display cell metadata and the results of
+community detection clustering by Louvain or Leiden algorithms as
+implemented in Seurat. In addition, gene and transcript feature
+expression can be overlaid on embedding plots both at the gene and
+transcript level.</p>
 <p><img src="images/louvain_and_feature_umap_plot.png"></p>
 </div>
 <div class="section level4">
@@ -169,8 +170,8 @@ variable’ 2. ‘Data Type (Transformed/Raw)’</p>
 </h3>
 <p>seuratTools provides different methods of differential expression
 analysis that users can choose from to determine differential expression
-of gene. DE methods included in seuratTools are t-test, Wilcoxon rank-sum
-test, Likelihood ratio test, and MAST</p>
+of gene. DE methods included in seuratTools are t-test, Wilcoxon
+rank-sum test, Likelihood ratio test, and MAST</p>
 <p>Running DE testing results in a data frame containing the following
 information: * p_val : Unadjusted p-value * avg_log2FC : log fold-change
 of the average expression between the two groups. * pct.1 : The
@@ -179,7 +180,7 @@ pct.2 : The percentage of cells where the feature is detected in the
 second group * p_val_adj : Adjusted p-value, based on bonferroni
 correction using all features in the dataset.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">d1</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.csv</a></span><span class="op">(</span><span class="st">"Dominic.csv"</span>, header <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">d1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.csv</a></span><span class="op">(</span><span class="st">"Dominic.csv"</span>, header <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="find-markers">Find Markers<a class="anchor" aria-label="anchor" href="#find-markers"></a>
@@ -199,10 +200,10 @@ on adjusted p value and thresholded log fold change.</p>
 metadata whether experimentally determined (age, collection method,
 etc.) or derived from analysis (quality control metrics, annotated cell
 type)</p>
-<p>seuratTools makes it simple to subset a dataset consisting of a single
-batch or batch-integrated dataset. Subsetting can be accomplished either
-in a graphical setting by lasso-selection from a dimensionally reduced
-plot or by by specification of a formatted .csv file.</p>
+<p>seuratTools makes it simple to subset a dataset consisting of a
+single batch or batch-integrated dataset. Subsetting can be accomplished
+either in a graphical setting by lasso-selection from a dimensionally
+reduced plot or by by specification of a formatted .csv file.</p>
 <p>Subsetting of single or batch integrated data will trigger renewal of
 all relevant preprocessing steps including dimensional reduction,
 clustering, marker gene, and pathway enrichment as well as integration
@@ -263,8 +264,8 @@ numbers, and dataset features can be viewed.</p>
 <h2 id="server-mode">Server Mode<a class="anchor" aria-label="anchor" href="#server-mode"></a>
 </h2>
 <p>If we want work with seurat objects interactively and save the
-results of our exploratory data analysis we need to operate seuratTools in
-<em>server mode</em>. When operating in this manner it is possible to
+results of our exploratory data analysis we need to operate seuratTools
+in <em>server mode</em>. When operating in this manner it is possible to
 carry out basic project management tasks including: * Loading saved
 seurat objects * Saving seurat objects after making changes in the app
 such as : * Reformatting metadata * Subsetting to remove cells *
@@ -283,8 +284,8 @@ functionality.</p>
 <div class="section level3">
 <h3 id="integrate-projects">Integrate Projects<a class="anchor" aria-label="anchor" href="#integrate-projects"></a>
 </h3>
-<p>While operating seuratTools in server mode, separate sequencing batches
-can be <a href="https://www.cell.com/cell/fulltext/S0092-8674(19)30559-8" class="external-link">integrated</a>
+<p>While operating seuratTools in server mode, separate sequencing
+batches can be <a href="https://www.cell.com/cell/fulltext/S0092-8674(19)30559-8" class="external-link">integrated</a>
 and compared to validate sample processing steps and exclude technical
 variation in favor of relevant biological variation.</p>
 <p>This section includes a list of projects that can be selected,

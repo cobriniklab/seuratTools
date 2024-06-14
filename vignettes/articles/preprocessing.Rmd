@@ -54,10 +54,6 @@ clustered_seu <- clustering_workflow(human_gene_transcript_seu,
 )
 ```
 
-```{r, results=FALSE, echo=FALSE}
-clustered_seu <- readRDS("clustered_seu.rds")
-```
-
 #### Clustering at 0.6
 
 ```{r, echo = FALSE}

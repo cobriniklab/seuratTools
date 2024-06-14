@@ -49,11 +49,6 @@ batches <-
 integrated_seu <- integration_workflow(batches)
 ```
 
-```{r, echo=FALSE}
-integrated_seu <- readRDS("~/rpkgs/seuratTools/seu_integrated.rds")
-```
-
-
 # Batch effects are problematic
 
 When analyzing data across multiple batches, batch effects can become problematic and compromise integration and interpretation of the data. For instance, the dataset `human_gene_transcript_seu` contains data obtained following two different preparation method. When this data is analyzed without integration we notice that in the Zhong method cluster 2 is barely represented. from the plot of marker features we know that cluster 2 has high expression of features associated with cones. this absence of cluster 2 in in Zhong method can become problematic during downstream analysis

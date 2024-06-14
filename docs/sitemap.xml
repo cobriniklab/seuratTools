@@ -103,7 +103,7 @@
     <loc>/reference/changeEmbedParamsui.html</loc>
   </url>
   <url>
-    <loc>/reference/seuratToolsBox.html</loc>
+    <loc>/reference/chevreulBox.html</loc>
   </url>
   <url>
     <loc>/reference/clustering_workflow.html</loc>
@@ -128,6 +128,9 @@
   </url>
   <url>
     <loc>/reference/convert_seu_to_cds.html</loc>
+  </url>
+  <url>
+    <loc>/reference/convert_seurat_to_sce.html</loc>
   </url>
   <url>
     <loc>/reference/convert_seuv3_to_monoclev2.html</loc>
@@ -166,10 +169,16 @@
     <loc>/reference/diffexui.html</loc>
   </url>
   <url>
+    <loc>/reference/dockerSeuratApp.html</loc>
+  </url>
+  <url>
     <loc>/reference/dot-send_enrichr_query.html</loc>
   </url>
   <url>
     <loc>/reference/dropdownButton.html</loc>
+  </url>
+  <url>
+    <loc>/reference/enframe_markers.html</loc>
   </url>
   <url>
     <loc>/reference/filter_low_rc_cells.html</loc>
@@ -268,10 +277,16 @@
     <loc>/reference/make_bigwig_db.html</loc>
   </url>
   <url>
+    <loc>/reference/make_chevreul_clean_names.html</loc>
+  </url>
+  <url>
     <loc>/reference/make_seuratTools_clean_names.html</loc>
   </url>
   <url>
     <loc>/reference/mem_str.html</loc>
+  </url>
+  <url>
+    <loc>/reference/merge_loom.html</loc>
   </url>
   <url>
     <loc>/reference/merge_small_seus.html</loc>
@@ -427,6 +442,9 @@
     <loc>/reference/propagate_spreadsheet_changes.html</loc>
   </url>
   <url>
+    <loc>/reference/query_experiment.html</loc>
+  </url>
+  <url>
     <loc>/reference/read_project_db.html</loc>
   </url>
   <url>
@@ -484,6 +502,9 @@
     <loc>/reference/sce_from_tibbles.html</loc>
   </url>
   <url>
+    <loc>/reference/scvelo_expression.html</loc>
+  </url>
+  <url>
     <loc>/reference/set_colnames_txi.html</loc>
   </url>
   <url>
@@ -500,6 +521,12 @@
   </url>
   <url>
     <loc>/reference/seuratApp.html</loc>
+  </url>
+  <url>
+    <loc>/reference/seuratTools-package.html</loc>
+  </url>
+  <url>
+    <loc>/reference/seuratToolsBox.html</loc>
   </url>
   <url>
     <loc>/reference/seurat_cluster.html</loc>
@@ -521,6 +548,12 @@
   </url>
   <url>
     <loc>/reference/seurat_reduce_dimensions.html</loc>
+  </url>
+  <url>
+    <loc>/reference/seurat_v5_integrate.html</loc>
+  </url>
+  <url>
+    <loc>/reference/seurat_v5_integration_pipeline.html</loc>
   </url>
   <url>
     <loc>/reference/stash_marker_features.html</loc>
@@ -553,7 +586,7 @@
     <loc>/reference/unite_metadata.html</loc>
   </url>
   <url>
-    <loc>/reference/update_seuratTools_object.html</loc>
+    <loc>/reference/update_chevreul_object.html</loc>
   </url>
   <url>
     <loc>/reference/update_exp_meta.html</loc>
@@ -566,5 +599,17 @@
   </url>
   <url>
     <loc>/reference/update_seu_meta.html</loc>
+  </url>
+  <url>
+    <loc>/reference/update_seuratTools_object.html</loc>
+  </url>
+  <url>
+    <loc>/reference/velocyto_assay.html</loc>
+  </url>
+  <url>
+    <loc>/reference/velocyto_seu.html</loc>
+  </url>
+  <url>
+    <loc>/reference/velocyto_seurat_from_loom.html</loc>
   </url>
 </urlset>
