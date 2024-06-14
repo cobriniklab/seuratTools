@@ -7,5 +7,8 @@ articles:
   preprocessing: preprocessing.html
   shiny_app: shiny_app.html
   visualization: visualization.html
-last_built: 2024-06-14T18:08Z
+last_built: 2024-06-14T20:25Z
+urls:
+  reference: https://whtns.github.io/seuratTools/reference
+  article: https://whtns.github.io/seuratTools/articles
 
