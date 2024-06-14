@@ -831,6 +831,11 @@ cells_selected <- function(input) {
 diffex <- function(input, output, session, seu, featureType, selected_cells, tests = c("t-test" = "t", "wilcoxon rank-sum test" = "wilcox", "Likelihood-ratio test (bimodal)" = "bimod", "MAST" = "MAST")) {
     ns <- session$ns
 
+    w <- waiter::Waiter$new(ns("volcano"),
+                            html = waiter::spin_loaders(id = 1, color = "black", style = "position:relative;margin:auto;"),
+                            color = waiter::transparent(.5)
+    )
+
     assay <- reactive({
         req(seu())
         if ("integrated" %in% names(seu()@assays)) {
@@ -896,6 +901,7 @@ diffex <- function(input, output, session, seu, featureType, selected_cells, tes
     })
 
     de_results <- eventReactive(input$diffex, {
+      w$show()
         if (input$diffex_scheme == "louvain") {
             run_seurat_de(seu(), input$cluster1, input$cluster2,
                 resolution = input$seuratResolution, diffex_scheme = "louvain", input$featureType, tests = input$diffex_method

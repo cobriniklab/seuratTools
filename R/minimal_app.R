@@ -25,8 +25,10 @@ minimalSeuratApp <- function(object = panc8, loom_path = NULL, appTitle = NULL,
         info = TRUE, searching = TRUE, autoWidth = F, ordering = TRUE,
         scrollX = TRUE, language = list(search = "Filter:")
     ))
-    header <- shinydashboard::dashboardHeader(title = appTitle)
+    header <- shinydashboard::dashboardHeader(title = "Cobrinik lab")
     sidebar <- shinydashboard::dashboardSidebar(
+      # img(src = "www/chla_butterfly_and_name.jpg", alt = "My Image"),
+      tags$a(href="https://www.chla.org/research/lab/cobrinik", "Visit the Cobrinik lab here!", target = "_blank"),
         textOutput("appTitle"),
         uiOutput("featureType"),
         shinydashboard::sidebarMenu(
@@ -36,8 +38,8 @@ minimalSeuratApp <- function(object = panc8, loom_path = NULL, appTitle = NULL,
                 tabName = "comparePlots", icon = icon("chart-bar"), selected = TRUE
             ), shinydashboard::menuItem("Heatmap/Violin Plots",
                 tabName = "violinPlots", icon = icon("sort")
-                # ), shinydashboard::menuItem("Coverage Plots",
-                #   tabName = "coveragePlots", icon = icon("mountain")
+            ), shinydashboard::menuItem("Coverage Plots",
+                  tabName = "coveragePlots", icon = icon("mountain")
             ), shinydashboard::menuItem("Differential Expression",
                 tabName = "diffex", icon = icon("magnet")
                 ), shinydashboard::menuItem("Pathway Enrichment Analysis",
@@ -271,7 +273,7 @@ minimalSeuratApp <- function(object = panc8, loom_path = NULL, appTitle = NULL,
             organism_type
         )
         callModule(
-            plotCoverage, "coverageplots", seu, plot_types, proj_dir, organism_type
+            plotCoverage, "coverageplots", seu, plot_types, proj_dir, organism_type, bigwig_db = bigwig_db
         )
         callModule(plotClustree, "clustreePlot", seu)
         callModule(tableSelected, "tableselected", seu)

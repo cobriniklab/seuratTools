@@ -225,7 +225,7 @@ prep_slider_values <- function(default_val) {
 #' @export
 #'
 #' @examples
-seuratApp <- function(preset_project, appTitle = "seuratTools", organism_type = "human", db_path = "~/.cache/seuratTools/single-cell-projects.db", futureMb = 13000) {
+seuratApp <- function(preset_project, appTitle = "seuratTools", organism_type = "human", bigwig_db = "~/.cache/seuratTools/bw-files.db", db_path = "~/.cache/seuratTools/single-cell-projects.db", futureMb = 13000) {
     print(packageVersion("seuratTools"))
     future::plan(strategy = "multicore", workers = 6)
     future_size <- futureMb * 1024^2
@@ -681,7 +681,7 @@ seuratApp <- function(preset_project, appTitle = "seuratTools", organism_type = 
         )
 
         callModule(
-            plotCoverage, "coverageplots", seu, plot_types, proj_dir, organism_type
+            plotCoverage, "coverageplots", seu, plot_types, proj_dir, organism_type, bigwig_db = bigwig_db
         )
         callModule(plotClustree, "clustreePlot", seu)
         callModule(tableSelected, "tableselected", seu)

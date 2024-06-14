@@ -4,6 +4,10 @@ scvelo <- NULL
 matplotlib <- NULL
 pyplot <- NULL
 .onLoad <- function(libname, pkgname) {
+  shiny::addResourcePath(
+    prefix = "www",
+    directoryPath = system.file("www", package = pkgname)
+  )
     # reticulate::configure_environment(pkgname, force = TRUE)
     # use superassignment to update global reference to scvelo
     # scvelo <<- reticulate::import("scvelo", delay_load = TRUE)
@@ -16,4 +20,8 @@ pyplot <- NULL
 install_scvelo <- function(method = "auto", conda = "auto") {
     reticulate::py_install("scvelo", method = method, conda = conda, pip = TRUE)
     reticulate::py_install("matplotlib", method = method, conda = conda)
+}
+
+.onUnload <- function(libname, pkgname) {
+  shiny::removeResourcePath("www")
 }
