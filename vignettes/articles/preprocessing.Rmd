@@ -37,7 +37,7 @@ library(ggraph)
 
 seuratTools provides a single command to:
 
--   construct a Seurat object
+-   construct Seurat objects
 
 -   filter genes by minimum expression and ubiquity
 
