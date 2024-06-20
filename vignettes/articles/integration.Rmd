@@ -58,6 +58,8 @@ When analyzing data across multiple batches, batch effects can become problemati
 markerp <- plot_markers(human_gene_transcript_seu, metavar = "gene_snn_res.0.2", num_markers = 10)
 dp <- DimPlot(human_gene_transcript_seu, group.by = "gene_snn_res.0.2", split.by = "Prep.Method")
 
+library(patchwork)
+
 wrap_plots(markerp, dp) +
     plot_layout(widths = c(1, 6), ncol = 1)
 ```
