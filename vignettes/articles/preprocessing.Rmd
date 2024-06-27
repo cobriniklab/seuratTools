@@ -69,12 +69,11 @@ minimalSeuratApp(clustered_seu)
 
 ## Set up a seurat object
 
-We start with a gene by cell matrix of count/UMI values and a table of cell metadata
+We start with a gene by cell matrix of count/UMI values 
 
 ```{r, eval=FALSE}
 human_count[1:5, 1:5]
 
-head(human_meta)
 ```
 
 ```{r, echo=FALSE}
@@ -82,7 +81,11 @@ human_count[1:10, 1:10] %>%
     format_table()
 ```
 
+and a table of corresponding cell metadata
+```{r, eval=FALSE}
 
+head(human_meta)
+```
 
 ```{r, echo=FALSE}
 head(human_meta) %>%

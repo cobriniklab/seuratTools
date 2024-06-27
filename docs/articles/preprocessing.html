@@ -53,9 +53,6 @@
       <a href="../articles/integration.html">Integration of Seurat objects</a>
     </li>
     <li>
-      <a href="../articles/pipeline.html">Pipeline</a>
-    </li>
-    <li>
       <a href="../articles/preprocessing.html">Preprocessing</a>
     </li>
     <li>
@@ -146,12 +143,9 @@ app<a class="anchor" aria-label="anchor" href="#get-a-first-look-at-a-processed-
 <div class="section level2">
 <h2 id="set-up-a-seurat-object">Set up a seurat object<a class="anchor" aria-label="anchor" href="#set-up-a-seurat-object"></a>
 </h2>
-<p>We start with a gene by cell matrix of count/UMI values and a table
-of cell metadata</p>
+<p>We start with a gene by cell matrix of count/UMI values</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">human_count</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span></span>
-<span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">human_meta</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">human_count</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span></span></code></pre></div>
 <div style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:200px; overflow-x: scroll; width:800px; ">
 <table class="table  lightable-material" style='font-family: "Source Sans Pro", helvetica, sans-serif; margin-left: auto; margin-right: auto;'>
 <thead><tr>
@@ -542,6 +536,10 @@ ABCA4
 </tbody>
 </table>
 </div>
+<p>and a table of corresponding cell metadata</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">human_meta</span><span class="op">)</span></span></code></pre></div>
 <div style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:200px; overflow-x: scroll; width:800px; ">
 <table class="table  lightable-material" style='font-family: "Source Sans Pro", helvetica, sans-serif; margin-left: auto; margin-right: auto;'>
 <thead><tr>
@@ -1907,7 +1905,7 @@ NA
 </div>
 <p>Then using these 2 datasets we can create a Seurat object in the
 usual manner using the <code>CreateSeuratObject</code> function</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">myseu</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/SeuratObject/man/CreateSeuratObject.html" class="external-link">CreateSeuratObject</a></span><span class="op">(</span><span class="va">human_count</span>, assay <span class="op">=</span> <span class="st">"gene"</span>, meta.data <span class="op">=</span> <span class="va">human_meta</span><span class="op">)</span></span>
 <span><span class="va">myseu</span></span>
 <span><span class="co">#&gt; An object of class Seurat </span></span>
@@ -1922,7 +1920,7 @@ usual manner using the <code>CreateSeuratObject</code> function</p>
 handles normalization and scaling required for downstream analysis.
 Preprocessing is performed using existing Seurat functions. If needed,
 parameters can be specified by the user.</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">myseu</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/seurat_preprocess.html">seurat_preprocess</a></span><span class="op">(</span><span class="va">myseu</span><span class="op">)</span></span></code></pre></div>
 <p>This single function includes sub-functions that normalizes,
 identifies highly variable features and scales the data:</p>
@@ -1930,14 +1928,14 @@ identifies highly variable features and scales the data:</p>
 <li>The normalizing sub-function performs log normalization using a
 default scale factor of 10,000.</li>
 </ul>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">preprocess_seu</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/NormalizeData.html" class="external-link">NormalizeData</a></span><span class="op">(</span><span class="va">myseu</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
 <ul>
 <li>After normalization, subset of features that exhibit high
 cell-to-cell variation in the dataset are identified. By default, 2,000
 features per dataset are returned by this function.</li>
 </ul>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">preprocess_seu</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/FindVariableFeatures.html" class="external-link">FindVariableFeatures</a></span><span class="op">(</span><span class="va">preprocess_seu</span>,</span>
 <span>    selection.method <span class="op">=</span> <span class="st">"vst"</span>,</span>
 <span>    verbose <span class="op">=</span> <span class="cn">FALSE</span></span>
@@ -1948,7 +1946,7 @@ step shifts the gene expression, so that the mean expression across
 cells is 0 and scales the gene expression, so that the variance across
 cells is 1.</li>
 </ul>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">pre_process_seu</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/ScaleData.html" class="external-link">ScaleData</a></span><span class="op">(</span><span class="va">preprocess_seu</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
@@ -1958,16 +1956,16 @@ cells is 1.</li>
 to select variable features at a user-specified threshold and perform
 PCA, tSNE, and UMAP. The default assay the dimension reduction is being
 run on is “gene”.</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">myseu</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/seurat_reduce_dimensions.html">seurat_reduce_dimensions</a></span><span class="op">(</span><span class="va">myseu</span>, assay <span class="op">=</span> <span class="st">"RNA"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://satijalab.org/seurat/reference/DimPlot.html" class="external-link">DimPlot</a></span><span class="op">(</span><span class="va">myseu</span><span class="op">)</span></span></code></pre></div>
-<p><img src="preprocessing_files/figure-html/unnamed-chunk-13-1.png" width="100%"></p>
+<p><img src="preprocessing_files/figure-html/unnamed-chunk-14-1.png" width="100%"></p>
 <p>This function includes existing seurat functions which performs
 dimension reduction techniques.</p>
 <ul>
 <li>Perform PCA: Runs a PCA dimensionality reduction.</li>
 </ul>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">Dim_Red_seu</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/RunPCA.html" class="external-link">RunPCA</a></span><span class="op">(</span><span class="va">myseu</span>,</span>
 <span>    features <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/SeuratObject/man/VariableFeatures.html" class="external-link">VariableFeatures</a></span><span class="op">(</span><span class="va">myseu</span><span class="op">)</span>,</span>
 <span>    do.print <span class="op">=</span> <span class="cn">FALSE</span></span>
@@ -1976,7 +1974,7 @@ dimension reduction techniques.</p>
 <li>Perform UMAP: Runs the Uniform Manifold Approximation and Projection
 (UMAP) dimensional reduction technique.</li>
 </ul>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">Dim_Red_seu</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/RunUMAP.html" class="external-link">RunUMAP</a></span><span class="op">(</span><span class="va">Dim_Red_seu</span>, dims <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">30</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
@@ -1986,7 +1984,7 @@ dimension reduction techniques.</p>
 algorithms available in Seurat. Clustering is performed at a range of
 resolutions with default value ranging from 0.2 to 2 and pca
 reduction</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">seu</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/seurat_cluster.html">seurat_cluster</a></span><span class="op">(</span>seu <span class="op">=</span> <span class="va">Dim_Red_seu</span>, resolution <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0.2</span>, <span class="fl">2</span>, by <span class="op">=</span> <span class="fl">0.2</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p>This function produces clustering analysis via two steps performed
 using two different sub-functions</p>

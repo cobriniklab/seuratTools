@@ -53,9 +53,6 @@
       <a href="../articles/integration.html">Integration of Seurat objects</a>
     </li>
     <li>
-      <a href="../articles/pipeline.html">Pipeline</a>
-    </li>
-    <li>
       <a href="../articles/preprocessing.html">Preprocessing</a>
     </li>
     <li>
@@ -145,6 +142,8 @@ problematic during downstream analysis</p>
 <code class="sourceCode R"><span><span class="va">markerp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/plot_markers.html">plot_markers</a></span><span class="op">(</span><span class="va">human_gene_transcript_seu</span>, metavar <span class="op">=</span> <span class="st">"gene_snn_res.0.2"</span>, num_markers <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
 <span><span class="va">dp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/DimPlot.html" class="external-link">DimPlot</a></span><span class="op">(</span><span class="va">human_gene_transcript_seu</span>, group.by <span class="op">=</span> <span class="st">"gene_snn_res.0.2"</span>, split.by <span class="op">=</span> <span class="st">"Prep.Method"</span><span class="op">)</span></span>
 <span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://patchwork.data-imaginist.com" class="external-link">patchwork</a></span><span class="op">)</span></span>
+<span></span>
 <span><span class="fu"><a href="https://patchwork.data-imaginist.com/reference/wrap_plots.html" class="external-link">wrap_plots</a></span><span class="op">(</span><span class="va">markerp</span>, <span class="va">dp</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://patchwork.data-imaginist.com/reference/plot_layout.html" class="external-link">plot_layout</a></span><span class="op">(</span>widths <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">6</span><span class="op">)</span>, ncol <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></code></pre></div>
 <p><img src="integration_files/figure-html/unnamed-chunk-3-1.png" width="100%"></p>
@@ -189,10 +188,13 @@ plotting the output</p>
 <code class="sourceCode R"><span><span class="fu"><a href="https://satijalab.org/seurat/reference/DimPlot.html" class="external-link">DimPlot</a></span><span class="op">(</span><span class="va">integrated_seu</span>, reduction <span class="op">=</span> <span class="st">"umap"</span>, group.by <span class="op">=</span> <span class="st">"Prep.Method"</span>, <span class="op">)</span></span></code></pre></div>
 <p><img src="integration_files/figure-html/unnamed-chunk-4-1.png" width="100%"></p>
 </div>
-<div class="section level3">
-<h3 id="asumtions-of-the-input-data">Asumtions of the input data<a class="anchor" aria-label="anchor" href="#asumtions-of-the-input-data"></a>
-</h3>
 </div>
+<div class="section level2">
+<h2 id="assumptions-of-the-input-data">Assumptions of the input data<a class="anchor" aria-label="anchor" href="#assumptions-of-the-input-data"></a>
+</h2>
+<p>Prior to integration, the Seurat object must be pre-processed using
+the <code>object_preprocess</code> function. This function handles
+normalization and scaling required for downstream data analysis.</p>
 </div>
   </div>
 

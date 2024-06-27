@@ -10,19 +10,19 @@
     <loc>https://whtns.github.io/seuratTools/LICENSE.html</loc>
   </url>
   <url>
-    <loc>https://whtns.github.io/seuratTools/articles/GettingStarted.html</loc>
-  </url>
-  <url>
     <loc>https://whtns.github.io/seuratTools/articles/articles/GettingStarted.html</loc>
   </url>
   <url>
     <loc>https://whtns.github.io/seuratTools/articles/articles/integration.html</loc>
   </url>
   <url>
+    <loc>https://whtns.github.io/seuratTools/articles/articles/pipeline.html</loc>
+  </url>
+  <url>
     <loc>https://whtns.github.io/seuratTools/articles/articles/preprocessing.html</loc>
   </url>
   <url>
-    <loc>https://whtns.github.io/seuratTools/articles/articles/shinyApp.html</loc>
+    <loc>https://whtns.github.io/seuratTools/articles/articles/shiny_app.html</loc>
   </url>
   <url>
     <loc>https://whtns.github.io/seuratTools/articles/articles/visualization.html</loc>
@@ -34,13 +34,7 @@
     <loc>https://whtns.github.io/seuratTools/articles/integration.html</loc>
   </url>
   <url>
-    <loc>https://whtns.github.io/seuratTools/articles/pipeline.html</loc>
-  </url>
-  <url>
     <loc>https://whtns.github.io/seuratTools/articles/preprocessing.html</loc>
-  </url>
-  <url>
-    <loc>https://whtns.github.io/seuratTools/articles/shinyApp.html</loc>
   </url>
   <url>
     <loc>https://whtns.github.io/seuratTools/articles/shiny_app.html</loc>

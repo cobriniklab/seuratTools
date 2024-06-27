@@ -53,9 +53,6 @@
       <a href="../articles/integration.html">Integration of Seurat objects</a>
     </li>
     <li>
-      <a href="../articles/pipeline.html">Pipeline</a>
-    </li>
-    <li>
       <a href="../articles/preprocessing.html">Preprocessing</a>
     </li>
     <li>
@@ -101,20 +98,22 @@
     
     
 <p>seuratTools allows exploratory data analysis of a single cell dataset
-processed using <code>Seurat</code> with the command
-<code><a href="../reference/minimalSeuratApp.html">minimalSeuratApp()</a></code></p>
+processed using <code>Seurat</code>. A demo using a human gene
+transcript dataset from Shayler et al. (link) is available
+<a href="https://docker.saban.chla.usc.edu/cobrinik/app/seuratApp/" target="_blank" rel="noopener noreferrer" class="external-link">here</a></p>
 <p>Here we’ll provide a brief tour of this app organized by section with
 app functions organized as tabs along the sidebar upon startup.</p>
 <div class="section level3">
 <h3 id="reformat-metadata">Reformat Metadata<a class="anchor" aria-label="anchor" href="#reformat-metadata"></a>
 </h3>
-<!-- ** Make spreadsheet smaller in the app** -->
-<p>Arbitrary variables can be appended to the cell metadata based on the
-results of exploratory data analysis.
-<!-- **** where is the split by option in the app? --> Metadata addition
-can be executed by uploading a csv with row names matching cell ids with
-new variables as columns. Metadata editing can also be accomplished
-using a built-in spreadsheet tool.</p>
+<p>The metadata of the single cell dataset can be reformatted by
+appending arbitrary variables to the cell metadata based on the results
+of exploratory data analysis.</p>
+<p>Metadata addition can be executed by uploading a csv with row names
+matching cell ids with new variables as columns. Metadata editing can
+also be accomplished using a built-in spreadsheet tool which displays
+complete metadata values that can be edited by filtering and clicking
+through the spreadsheet cells.</p>
 </div>
 <div class="section level3">
 <h3 id="plot-data">Plot Data<a class="anchor" aria-label="anchor" href="#plot-data"></a>
@@ -129,7 +128,7 @@ community detection clustering by Louvain or Leiden algorithms as
 implemented in Seurat. In addition, gene and transcript feature
 expression can be overlaid on embedding plots both at the gene and
 transcript level.</p>
-<p><img src="images/louvain_and_feature_umap_plot.png"></p>
+<p><img src="images/louvain_and_feature_umap_plot.png" style="width:70.0%"></p>
 </div>
 <div class="section level4">
 <h4 id="readumi-count-histograms">read/UMI count histograms<a class="anchor" aria-label="anchor" href="#readumi-count-histograms"></a>
@@ -137,7 +136,7 @@ transcript level.</p>
 <p>To facilitate quality control, cell-level summarized umi and read
 count values can also be overlaid with cell metadata and clustering
 results.</p>
-<p><img src="images/pair_of_histograms.png"></p>
+<p><img src="images/pair_of_histograms.png" style="width:70.0%"></p>
 </div>
 <div class="section level4">
 <h4 id="clustering-trees">Clustering trees<a class="anchor" aria-label="anchor" href="#clustering-trees"></a>
@@ -145,7 +144,7 @@ results.</p>
 <p>A cluster tree of cell identities is displayed using <a href="https://lazappi.github.io/clustree/articles/clustree.html" class="external-link">scclustviz</a>.
 This plot can be used to help establish an optimal clustering
 resolution.</p>
-<p><img src="images/clustree.png"></p>
+<p><img src="images/clustree.png" style="width:70.0%"></p>
 </div>
 </div>
 <div class="section level3">
@@ -163,7 +162,7 @@ parameter to produce a complex heat map.</p>
 <p>By default, 50 most highly variable genes are displayed. However, an
 arbitrary lists of genes can be plotted for comparison. The
 genes/transcripts are displayed in the order they are listed.</p>
-<p><img src="images/Heatmap2.0.png"></p>
+<p><img src="images/Heatmap2.0.png" style="width:70.0%"></p>
 </div>
 <div class="section level4">
 <h4 id="violin-plots">
@@ -178,8 +177,21 @@ different groups of cell. The horizontal line is a marker for the median
 of the data and the box shows the interquartile ranges.</p>
 <p>The parameters that could to be chosen here are: 1. ‘Grouping
 variable’ 2. ‘Data Type (Transformed/Raw)’</p>
-<p><img src="images/violinPlot.png"></p>
+<p><img src="images/violinPlot.png" style="width:70.0%"></p>
 </div>
+</div>
+<div class="section level3">
+<h3 id="coverage-plots">Coverage plots<a class="anchor" aria-label="anchor" href="#coverage-plots"></a>
+</h3>
+<p>Fine-grained analysis of isoform contributions can be achieved by
+plotting absolute read coverage plots across a given gene.</p>
+<p>indicate the **read depths across all transcripts for different
+groups of cells within a genomic region.</p>
+<p>The three user input parameters are: 1. ‘Select a gene’- Select a
+gene of interest 2. ‘Color by variable’- Select a variable by which to
+group the cells by 3. ‘Groups to display’- Select the groups to be
+displayed</p>
+<p><img src="images/PlotCoverage2.0.png" style="width:70.0%"></p>
 </div>
 <div class="section level3">
 <h3 id="differential-expression">Differential expression<a class="anchor" aria-label="anchor" href="#differential-expression"></a>
@@ -197,6 +209,15 @@ second group * p_val_adj : Adjusted p-value, based on bonferroni
 correction using all features in the dataset.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">d1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.csv</a></span><span class="op">(</span><span class="st">"Dominic.csv"</span>, header <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<div class="section level4">
+<h4 id="volcano-plot">Volcano Plot<a class="anchor" aria-label="anchor" href="#volcano-plot"></a>
+</h4>
+<p>The results of from the DE analysis is plotted using a volcano plot
+that shows statistical significance (P value) versus magnitude of change
+(fold change). Here, the cutoffs for log2FC and P value can be adjusted
+to set thresholds for statistical significance.</p>
+<p><img src="images/VolcanoPlot.png" style="width:70.0%"></p>
+</div>
 </div>
 <div class="section level3">
 <h3 id="find-markers">Find Markers<a class="anchor" aria-label="anchor" href="#find-markers"></a>
@@ -207,7 +228,7 @@ metadata can be defined based on results of wilcoxon rank-sum test via
 measures of cluster specificity with genesorteR (Ibrahim, 2020) .
 Variable numbers of marker genes per cell group can be specified based
 on adjusted p value and thresholded log fold change.</p>
-<p><img src="images/marker_gene_plot.png"></p>
+<p><img src="images/marker_gene_plot.png" style="width:70.0%"></p>
 </div>
 <div class="section level3">
 <h3 id="subset-seurat-input">Subset Seurat Input<a class="anchor" aria-label="anchor" href="#subset-seurat-input"></a>
@@ -236,11 +257,11 @@ transcript ids) making up a given gene.</p>
 <li>dimensional reduction method: PCA, UMAP or tSNE</li>
 <li>The name of the gene of interest</li>
 </ol>
-<p><img src="images/unnamed-chunk-9-1.png"></p>
+<p><img src="images/unnamed-chunk-9-1.png" style="width:70.0%"></p>
 <p>Direct comparison of the contribution of individual transcripts can
 be achieved using stacked bar plots to answer the question: What
 contribution does each transcript make for each gene expression?</p>
-<p><img src="images/transcript_composisiont.png"></p>
+<p><img src="images/transcript_composisiont.png" style="width:70.0%"></p>
 </div>
 <div class="section level3">
 <h3 id="pseudotime-analysis-by-monocle-3">Pseudotime Analysis by <a href="https://cole-trapnell-lab.github.io/monocle3/" class="external-link">Monocle 3</a><a class="anchor" aria-label="anchor" href="#pseudotime-analysis-by-monocle-3"></a>
@@ -251,10 +272,10 @@ calculate a trajectory graph. 1. Root cells can be specified and cells
 ordered in pseudotime with monocle3. 2. Features that vary significantly
 over pseudotime based on autocorrelation can then be determined and
 grouped into modules that vary similarly over pseudotime.</p>
-<p><img src="images/monocle_first_steps.png"></p>
+<p><img src="images/monocle_first_steps.png" style="width:70.0%"></p>
 <p>Heat maps and scatter plots are available at gene and module
 levels.</p>
-<p><img src="images/monocle_final_steps.png"></p>
+<p><img src="images/monocle_final_steps.png" style="width:70.0%"></p>
 </div>
 <div class="section level3">
 <h3 id="regress-features">Regress Features<a class="anchor" aria-label="anchor" href="#regress-features"></a>
@@ -267,82 +288,20 @@ relevant genes, to regress out cell-cycle effects, for <a href="https://satijala
 <p>Such regression can be performed for any arbitrary gene set. Some
 preset gene lists are included in <code>seuratTools</code> including
 cell-cycle, mitochondrial, and apoptosis related gene sets.</p>
-<p><img src="images/Screenshot_2023-08-25_at_1.40.35_PM.png"></p>
+<p><img src="images/Screenshot_2023-08-25_at_1.40.35_PM.png" style="width:70.0%"></p>
 </div>
 <div class="section level3">
 <h3 id="technical-information">Technical information<a class="anchor" aria-label="anchor" href="#technical-information"></a>
 </h3>
 <p>Technical information regarding upstream processing, software version
 numbers, and dataset features can be viewed.</p>
-<p><img src="images/Screenshot_2023-08-25_at_1.40.57_PM.png"></p>
-</div>
-<div class="section level2">
-<h2 id="server-mode">Server Mode<a class="anchor" aria-label="anchor" href="#server-mode"></a>
-</h2>
-<p>If we want work with seurat objects interactively and save the
-results of our exploratory data analysis we need to operate seuratTools
-in <em>server mode</em>. When operating in this manner it is possible to
-carry out basic project management tasks including: * Loading saved
-seurat objects * Saving seurat objects after making changes in the app
-such as : * Reformatting metadata * Subsetting to remove cells *
-Regressing feature expression as well as * Integrating multiple saved
-seurat objects</p>
-<p>Finally, server mode is necessary for some expanded functionality
-including: * Coverage plotting * RNA velocity</p>
-<p><em>server mode</em> requires access to a few sqlite databases with
-file path details stored in <code>~/.cache/seuratTools</code>.
-<code>single_cell_projects.db</code> and <code>bigwig_files.db</code>
-allowing dynamic loading of seurat objects and bigwig (.bw) sample
-coverage files for each cell. These are initialized upon package
-installation using the <code>creat_project_db</code> function.</p>
-<p>The following sections will give details on this expanded
-functionality.</p>
-<div class="section level3">
-<h3 id="integrate-projects">Integrate Projects<a class="anchor" aria-label="anchor" href="#integrate-projects"></a>
-</h3>
-<p>While operating seuratTools in server mode, separate sequencing
-batches can be <a href="https://www.cell.com/cell/fulltext/S0092-8674(19)30559-8" class="external-link">integrated</a>
-and compared to validate sample processing steps and exclude technical
-variation in favor of relevant biological variation.</p>
-<p>This section includes a list of projects that can be selected,
-integrated, and saved for future analysis.</p>
-</div>
-<div class="section level3">
-<h3 id="coverage-plots">Coverage plots<a class="anchor" aria-label="anchor" href="#coverage-plots"></a>
-</h3>
-<p>Fine-grained analysis of isoform contributions can be achieved by
-plotting absolute read coverage plots across a given gene.</p>
-<p>indicate the **read depths across all transcripts for different
-groups of cells within a genomic region.</p>
-<p>The three user input parameters are: 1. ‘Select a gene’- Select a
-gene of interest 2. ‘Color by variable’- Select a variable by which to
-group the cells by 3. ‘Groups to display’- Select the groups to be
-displayed</p>
-<p><img src="images/PlotCoverage2.0.png" style="width:80.0%;height:80.0%"></p>
-</div>
-<div class="section level3">
-<h3 id="rna-velocity">RNA Velocity<a class="anchor" aria-label="anchor" href="#rna-velocity"></a>
-</h3>
-<p>RNA velocity can be used to forecast the future state of a given cell
-in a developmental or time-dependent process. seuratTools provides
-visualization and processing functionality using <a href="https://velocyto.org/" class="external-link">velocyto</a>. Velocity can be represented
-on UMAP or tSNE plots in multiple formats and exported as needed.</p>
-<p>RNA velocity necessitates the calculation of spliced and unspliced
-transcript counts as implemented on the command-line in velocyto. As a
-result integration within seuratTools demands some familiarity with the
-command-line and the availability of a properly formatted <a href="https://velocyto.org/velocyto.py/tutorial/cli.html#about-the-output-loom-file" class="external-link">loom</a>
-file. To enable plotting of RNA velocity, the path to the corresponding
-loom file must be provided.</p>
-<p><img src="images/Screenshot_2023-08-25_at_1.28.26_PM.png"></p>
-</div>
+<p><img src="images/Screenshot_2023-08-25_at_1.40.57_PM.png" style="width:70.0%"></p>
 </div>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
 
-        <nav id="toc" data-toggle="toc"><h2 data-toc-skip>Contents</h2>
-    </nav>
-</div>
+      </div>
 
 </div>
 

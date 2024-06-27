@@ -17,16 +17,16 @@ library(kableExtra)
 ```
 
 
-seuratTools allows exploratory data analysis of a single cell dataset processed using `Seurat` with the command `minimalSeuratApp()`
+seuratTools allows exploratory data analysis of a single cell dataset processed using `Seurat`. A demo using a human gene transcript dataset from Shayler et al. (link) is available <a href="https://docker.saban.chla.usc.edu/cobrinik/app/seuratApp/" target="_blank" rel="noopener noreferrer">here</a>
 
 Here we'll provide a brief tour of this app organized by section with app functions organized as tabs along the sidebar upon startup.
 
 ### Reformat Metadata 
 
-<!-- ** Make spreadsheet smaller in the app** -->
-Arbitrary variables can be appended to the cell metadata based on the results of exploratory data analysis. 
-<!-- **** where is the split by option in the app? -->
-Metadata addition can be executed by uploading a csv with row names matching cell ids with new variables as columns. Metadata editing can also be accomplished using a built-in spreadsheet tool. 
+
+The metadata of the single cell dataset can be reformatted by appending arbitrary variables to the cell metadata based on the results of exploratory data analysis. 
+
+Metadata addition can be executed by uploading a csv with row names matching cell ids with new variables as columns. Metadata editing can also be accomplished using a built-in spreadsheet tool which displays complete metadata values that can be edited by filtering and clicking through the spreadsheet cells.
 
 ### Plot Data
 
@@ -35,19 +35,19 @@ seuratTools provides visualization of embeddings in PCA, tSNE, and UMAP for scRN
 Plots can be customized to display cell metadata and the results of community detection clustering by Louvain or Leiden algorithms as implemented in Seurat. 
 In addition, gene and transcript feature expression can be overlaid on embedding plots both at the gene and transcript level. 
 
-![](images/louvain_and_feature_umap_plot.png)
+![](images/louvain_and_feature_umap_plot.png){width=70%}
 
 #### read/UMI count histograms 
 To facilitate quality control, cell-level summarized umi and read count values can also be overlaid with cell metadata and clustering results.   
 
-![](images/pair_of_histograms.png)
+![](images/pair_of_histograms.png){width=70%}
 
 #### Clustering trees
 
 A cluster tree of cell identities is displayed using [scclustviz](https://lazappi.github.io/clustree/articles/clustree.html). 
 This plot can be used to help establish an optimal clustering resolution. 
 
-![](images/clustree.png)
+![](images/clustree.png){width=70%}
 
 ### Heat Maps/Violin Plots
 
@@ -59,7 +59,7 @@ Clustering model or metadata for column arrangement is taken as a parameter to p
 
 By default, 50 most highly variable genes are displayed. However, an arbitrary lists of genes can be plotted for comparison. The genes/transcripts are displayed in the order they are listed. 
 
-![](images/Heatmap2.0.png)
+![](images/Heatmap2.0.png){width=70%}
 
 #### _Violin Plots_
 
@@ -71,11 +71,27 @@ The parameters that could to be chosen here are:
 1. 'Grouping variable'
 2. 'Data Type (Transformed/Raw)'
 
-![](images/violinPlot.png)
+![](images/violinPlot.png){width=70%}
+
+### Coverage plots
+
+Fine-grained analysis of isoform contributions can be achieved by plotting absolute read coverage plots across a given gene. 
+
+indicate the **read depths across all transcripts for different groups of cells within a genomic region. 
+
+The three user input parameters are:
+1. 'Select a gene'- Select a gene of interest
+2. 'Color by variable'- Select a variable by which to group the cells by
+3. 'Groups to display'- Select the groups to be displayed
+
+![](images/PlotCoverage2.0.png){width=70%}
+
 
 ### Differential expression
 
-seuratTools provides different methods of differential expression analysis that users can choose from to determine differential expression of gene. DE methods included in seuratTools are t-test, Wilcoxon rank-sum test, Likelihood ratio test, and MAST
+seuratTools provides different methods of differential expression analysis that 
+users can choose from to determine differential expression of gene. DE methods 
+included in seuratTools are t-test, Wilcoxon rank-sum test, Likelihood ratio test, and MAST
 
 Running DE testing results in a data frame containing the following information:
 *  p_val : Unadjusted p-value 
@@ -88,13 +104,20 @@ Running DE testing results in a data frame containing the following information:
 d1 <- read.csv("Dominic.csv", header = TRUE)
 ```
 
+#### Volcano Plot
 
+The results of from the DE analysis is plotted using a volcano plot that shows 
+statistical significance (P value) versus magnitude of change (fold change). 
+Here, the cutoffs for log2FC and P value can be adjusted to set thresholds 
+for statistical significance.
+
+![](images/VolcanoPlot.png){width=70%}
 
 ### Find Markers
 
 Marker features based on louvain/leiden cluster identities or cell metadata can be defined based on results of wilcoxon rank-sum test via [presto](https://www.biorxiv.org/content/10.1101/653253v1) or measures of cluster specificity with genesorteR (Ibrahim, 2020) . Variable numbers of marker genes per cell group can be specified based on adjusted p value and thresholded log fold change.
 
-![](images/marker_gene_plot.png)
+![](images/marker_gene_plot.png){width=70%}
 
 ### Subset Seurat Input
 
@@ -113,11 +136,11 @@ The two parameters that must be chosen are:
 1. dimensional reduction method: PCA, UMAP or tSNE
 2. The name of the gene of interest 
 
-![](images/unnamed-chunk-9-1.png)
+![](images/unnamed-chunk-9-1.png){width=70%}
 
 Direct comparison of the contribution of individual transcripts can be achieved using stacked bar plots to answer the question: What contribution does each transcript make for each gene expression?
 
-![](images/transcript_composisiont.png)
+![](images/transcript_composisiont.png){width=70%}
 
 
 ### Pseudotime Analysis by [Monocle 3](https://cole-trapnell-lab.github.io/monocle3/)
@@ -127,11 +150,11 @@ Pseudotime analysis is broken into several steps, mirroring a typical command-li
 1. Root cells can be specified and cells ordered in pseudotime with monocle3. 
 2. Features that vary significantly over pseudotime based on autocorrelation can then be determined and grouped into modules that vary similarly over pseudotime. 
 
-![](images/monocle_first_steps.png)
+![](images/monocle_first_steps.png){width=70%}
 
 Heat maps and scatter plots are available at gene and module levels.
 
-![](images/monocle_final_steps.png)
+![](images/monocle_final_steps.png){width=70%}
 
 ### Regress Features
 
@@ -140,56 +163,14 @@ rather than excluding count values attributable to such process, we can adjust t
 
 Such regression can be performed for any arbitrary gene set. Some preset gene lists are included in `seuratTools` including cell-cycle, mitochondrial, and apoptosis related gene sets.
 
-![](images/Screenshot_2023-08-25_at_1.40.35_PM.png)
+![](images/Screenshot_2023-08-25_at_1.40.35_PM.png){width=70%}
 
 ### Technical information
 
 Technical information regarding upstream processing, software version numbers, and dataset features can be viewed. 
 
-![](images/Screenshot_2023-08-25_at_1.40.57_PM.png)
+![](images/Screenshot_2023-08-25_at_1.40.57_PM.png){width=70%}
 
 
 
-## Server Mode
-If we want work with seurat objects interactively and save the results of our exploratory data analysis we need to operate seuratTools in *server mode*. When operating in this manner it is possible to carry out basic project management tasks including:
-* Loading saved seurat objects 
-* Saving seurat objects after making changes in the app such as :
-  * Reformatting metadata 
-  * Subsetting to remove cells
-  * Regressing feature expression as well as
-* Integrating multiple saved seurat objects 
 
-Finally, server mode is necessary for some expanded functionality including:
-* Coverage plotting
-* RNA velocity
-
-*server mode* requires access to a few sqlite databases with file path details stored in `~/.cache/seuratTools`. `single_cell_projects.db` and `bigwig_files.db` allowing dynamic loading of seurat objects and bigwig (.bw) sample coverage files for each cell. These are initialized upon package installation using the `creat_project_db` function.
-
-The following sections will give details on this expanded functionality.
-
-### Integrate Projects
-
-While operating seuratTools in server mode, separate sequencing batches can be [integrated](https://www.cell.com/cell/fulltext/S0092-8674(19)30559-8) and compared to validate sample processing steps and exclude technical variation in favor of relevant biological variation. 
-
-This section includes a list of projects that can be selected, integrated, and saved for future analysis.
-
-### Coverage plots
-
-Fine-grained analysis of isoform contributions can be achieved by plotting absolute read coverage plots across a given gene. 
-
-indicate the **read depths across all transcripts for different groups of cells within a genomic region. 
-
-The three user input parameters are:
-1. 'Select a gene'- Select a gene of interest
-2. 'Color by variable'- Select a variable by which to group the cells by
-3. 'Groups to display'- Select the groups to be displayed
-
-![](images/PlotCoverage2.0.png){width=80% height=80%}
-
-### RNA Velocity
-
-RNA velocity can be used to forecast the future state of a given cell in a developmental or time-dependent process. seuratTools provides visualization and processing functionality using [velocyto](https://velocyto.org/). Velocity can be represented on UMAP or tSNE plots in multiple formats and exported as needed. 
-
-RNA velocity necessitates the calculation of spliced and unspliced transcript counts as implemented on the command-line in velocyto. As a result integration within seuratTools demands some familiarity with the command-line and the availability of a properly formatted [loom](https://velocyto.org/velocyto.py/tutorial/cli.html#about-the-output-loom-file) file. To enable plotting of RNA velocity, the path to the corresponding loom file must be provided.
-
-![](images/Screenshot_2023-08-25_at_1.28.26_PM.png)

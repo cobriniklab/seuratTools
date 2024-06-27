@@ -86,9 +86,10 @@ Finally, the resulting integrated datasets can be visualized by plotting the out
 DimPlot(integrated_seu, reduction = "umap", group.by = "Prep.Method", )
 ```
 
-## Asumtions of the input data
 
+# Assumptions of the input data
 
+Prior to integration, the Seurat object must be pre-processed using the `object_preprocess` function. This function handles normalization and scaling required for downstream data analysis.
 
 
 

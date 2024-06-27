@@ -3,11 +3,10 @@ pkgdown: 2.0.7
 pkgdown_sha: ~
 articles:
   integration: integration.html
-  pipeline: pipeline.html
   preprocessing: preprocessing.html
   shiny_app: shiny_app.html
   visualization: visualization.html
-last_built: 2024-06-19T23:36Z
+last_built: 2024-06-27T09:52Z
 urls:
   reference: https://whtns.github.io/seuratTools/reference
   article: https://whtns.github.io/seuratTools/articles
