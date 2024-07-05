@@ -111,13 +111,14 @@ statistical significance (P value) versus magnitude of change (fold change).
 Here, the cutoffs for log2FC and P value can be adjusted to set thresholds 
 for statistical significance.
 
-![](images/VolcanoPlot.png){width=70%}
+![](images/VolcanoPlot.png)
 
 ### Find Markers
 
 Marker features based on louvain/leiden cluster identities or cell metadata can be defined based on results of wilcoxon rank-sum test via [presto](https://www.biorxiv.org/content/10.1101/653253v1) or measures of cluster specificity with genesorteR (Ibrahim, 2020) . Variable numbers of marker genes per cell group can be specified based on adjusted p value and thresholded log fold change.
 
-![](images/marker_gene_plot.png){width=70%}
+![](images/marker_gene_plot.png)
+
 
 ### Subset Seurat Input
 
