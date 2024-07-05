@@ -71,7 +71,6 @@ Suggests:
     knitr,
     monocle3 (>= 0.2.1),
     rmarkdown,
-    SeuratWrappers (>= 0.2.0),
     testthat (>= 2.1.0)
 VignetteBuilder: 
     knitr
@@ -81,8 +80,7 @@ Remotes:
     immunogenomics/presto,
     jokergoo/ComplexHeatmap,
     mahmoudibrahim/genesorteR,
-    stephenturner/annotables,
-    satijalab/seurat-wrappers
+    stephenturner/annotables
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
