@@ -21,7 +21,7 @@
 #'     Seurat::SplitObject(split.by = "tech")
 #'
 #' integrated_seu <- seurat_integration_pipeline(batches)
-seurat_integration_pipeline <- function(seu_list, resolution = seq(0.2, 2.0, by = 0.2), suffix = "", algorithm = 1, organism = "human", annotate_cell_cycle = FALSE, annotate_percent_mito = FALSE, reduction = "pca", ...) {
+seurat_integration_pipeline <- function(seu_list, resolution = seq(0.2, 2.0, by = 0.2), suffix = "", algorithm = 1, organism = "human", annotate_cell_cycle = FALSE, annotate_percent_mito = FALSE, reduction = "pca", find_markers = TRUE, ...) {
     experiment_names <- names(seu_list)
 
     organisms <- case_when(
@@ -42,7 +42,10 @@ seurat_integration_pipeline <- function(seu_list, resolution = seq(0.2, 2.0, by 
 
     seurat_assay <- "gene"
     if ("harmony" %in% names(integrated_seu@reductions)) seurat_assay <- "integrated"
-    integrated_seu <- find_all_markers(integrated_seu, seurat_assay = seurat_assay)
+
+    if (find_markers){
+      integrated_seu <- find_all_markers(integrated_seu, seurat_assay = seurat_assay)
+    }
 
     #   enriched_seu <- tryCatch(getEnrichedPathways(integrated_seu), error = function(e) e)
     #   enrichr_available <- !any(class(enriched_seu) == "error")
