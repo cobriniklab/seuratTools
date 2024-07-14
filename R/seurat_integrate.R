@@ -130,7 +130,8 @@ seurat_integrate <- function(seu_list, method = "cca", organism = "human", ...) 
     Idents(seu_list.integrated) <- "batch"
     seu_list.integrated[["batch"]] <- Idents(seu_list.integrated)
 
-    seu_list.integrated <- JoinLayers(seu_list.integrated, assay = "gene")
+    # Do I need to joinLayers? error w/ rb tumor data
+    # seu_list.integrated <- JoinLayers(seu_list.integrated, assay = "gene")
 
     # switch to integrated assay. The variable features of this assay are
     # automatically set during IntegrateData
