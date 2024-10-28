@@ -7,7 +7,11 @@
 add_census_slot(seu, assay = "gene", slot = "counts")
 }
 \arguments{
-\item{slot}{}
+\item{seu}{seurat object}
+
+\item{assay}{assay}
+
+\item{slot}{expression modality}
 }
 \description{
 add census assay to a seurat object

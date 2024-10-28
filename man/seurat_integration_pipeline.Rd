@@ -13,6 +13,7 @@ seurat_integration_pipeline(
   annotate_cell_cycle = FALSE,
   annotate_percent_mito = FALSE,
   reduction = "pca",
+  find_markers = TRUE,
   ...
 )
 }

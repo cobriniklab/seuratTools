@@ -142,16 +142,16 @@ seurat_v5_integration_pipeline <- function(seu, resolution = seq(0.2, 2.0, by = 
 #' @param resolution Resolution for clustering cells. Default set to 0.6.
 #' @param reduction Dimensional reduction object seu
 #' @param organism Organism
-#' @param ... Extra parameters passed to seurat_pipeline
+#' @param ... Extra parameters passed to seurat_process
 #'
 #' @return
 #' @export
 #'
 #' @examples
 #'
-#' processed_seu <- seurat_pipeline(panc8)
+#' processed_seu <- seurat_process(panc8)
 #'
-seurat_pipeline <- function(seu, assay = "gene", resolution = 0.6, reduction = "pca", organism = "human", ...) {
+seurat_process <- function(seu, assay = "gene", resolution = 0.6, reduction = "pca", organism = "human", ...) {
     assays <- names(seu@assays)
 
     assays <- assays[assays %in% c("gene", "transcript")]

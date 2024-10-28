@@ -338,7 +338,7 @@ dockerSeuratApp <- function(object = panc8, loom_path = NULL, appTitle = NULL,
                         )
                         seu(reintegrated_seu)
                     } else {
-                        processed_seu <- seurat_pipeline(seu(), resolution = seq(0.2, 2, by = 0.2))
+                        processed_seu <- seurat_process(seu(), resolution = seq(0.2, 2, by = 0.2))
                         seu(processed_seu)
                     }
                     message("Complete!")
@@ -372,7 +372,7 @@ dockerSeuratApp <- function(object = panc8, loom_path = NULL, appTitle = NULL,
                         )
                         seu(reintegrated_seu)
                     } else {
-                        processed_seu <- seurat_pipeline(seu(), resolution = seq(0.2, 2, by = 0.2))
+                        processed_seu <- seurat_process(seu(), resolution = seq(0.2, 2, by = 0.2))
                         seu(processed_seu)
                     }
                     message("Complete!")

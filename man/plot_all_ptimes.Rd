@@ -4,7 +4,7 @@
 \alias{plot_all_ptimes}
 \title{Plot a Set of Heatmaps Based on a provided pseudotime}
 \usage{
-plot_all_ptimes(monocle_list, query_name, sig_slice = 1000, ...)
+plot_all_ptimes(monocle_list, query_name, sig_slice = 5000, ...)
 }
 \arguments{
 \item{...}{}

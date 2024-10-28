@@ -714,7 +714,7 @@ seuratApp <- function(preset_project, appTitle = "seuratTools", organism_type = 
                         )
                         seu(reintegrated_seu)
                     } else {
-                        subset_seu <- seurat_pipeline(seu(), resolution = seq(0.2, 2, by = 0.2), legacy_settings = input$legacySettingsSubset) # markermarker
+                        subset_seu <- seurat_process(seu(), resolution = seq(0.2, 2, by = 0.2), legacy_settings = input$legacySettingsSubset) # markermarker
                         seu(subset_seu)
                     }
                     message("Complete!")
@@ -748,7 +748,7 @@ seuratApp <- function(preset_project, appTitle = "seuratTools", organism_type = 
                         )
                         seu(reintegrated_seu)
                     } else {
-                        subset_seu <- seurat_pipeline(seu(),
+                        subset_seu <- seurat_process(seu(),
                             resolution = seq(0.2,
                                 2,
                                 by = 0.2

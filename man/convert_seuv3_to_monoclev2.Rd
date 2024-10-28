@@ -9,7 +9,7 @@ convert_seuv3_to_monoclev2(
   assay = "gene",
   slot = "data",
   return_census = FALSE,
-  sig_slice = 1000
+  sig_slice = 5000
 )
 }
 \arguments{
