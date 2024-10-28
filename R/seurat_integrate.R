@@ -159,9 +159,7 @@ seurat_integrate <- function(seu_list, method = "cca", organism = "human", ...) 
 #'
 #' @examples
 seurat_v5_integrate <- function(seu, method = "cca", organism = "human", ...) {
-  # To construct a reference we will identify ‘anchors’ between the individual datasets. First, we split the combined object into a list, with each dataset as an element.
 
-  # Prior to finding anchors, we perform standard preprocessing (log-normalization), and identify variable features individually for each. Note that Seurat v3 implements an improved method for variable feature selection based on a variance stabilizing transformation ("vst")
   seu[["integrated"]] <- split(seu[["gene"]], f = seu$batch)
 
   DefaultAssay(seu) <- "integrated"
@@ -386,8 +384,6 @@ SetDefaultAssay <- function(seu, new_assay) {
     Seurat::DefaultAssay(seu) <- new_assay
     return(seu)
 }
-
-
 
 #' Filter a List of Seurat Objects
 #'

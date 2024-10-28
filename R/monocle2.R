@@ -1,8 +1,8 @@
 #' add census assay to a seurat object
 #'
-#' @param seu
-#' @param assay
-#' @param slot
+#' @param seu seurat object
+#' @param assay assay
+#' @param slot expression modality
 #'
 #' @return
 #' @export
@@ -53,7 +53,7 @@ add_census_slot <- function(seu, assay = "gene", slot = "counts") {
 #' @export
 #'
 #' @examples
-convert_seuv3_to_monoclev2 <- function(seu, assay = "gene", slot = "data", return_census = FALSE, sig_slice = 1000) {
+convert_seuv3_to_monoclev2 <- function(seu, assay = "gene", slot = "data", return_census = FALSE, sig_slice = 5000) {
     # Load Seurat object
     # Extract data, phenotype data, and feature data from the SeuratObject
     # data <- as(as.matrix(seu@assays[["gene"]]@counts), "sparseMatrix")
@@ -194,8 +194,10 @@ convert_seuv3_to_monoclev2 <- function(seu, assay = "gene", slot = "data", retur
     tictoc::toc()
 
 
-    # select top 1000 signif. genes
-    ordering_genes <- row.names(diff_test_res)[order(diff_test_res$qval)][1:sig_slice]
+    # # select top 1000 signif. genes
+    # ordering_genes <- row.names(diff_test_res)[order(diff_test_res$qval)][1:sig_slice]
+
+    ordering_genes <- row.names(diff_test_res)[order(diff_test_res$qval)]
 
     monocle_cds <- setOrderingFilter(monocle_cds, ordering_genes = ordering_genes)
 
@@ -212,7 +214,7 @@ convert_seuv3_to_monoclev2 <- function(seu, assay = "gene", slot = "data", retur
 #' @export
 #'
 #' @examples
-convert_monoclev2_to_seuv3 <- function(seu, assay = "gene", slot = "data", return_census = FALSE, sig_slice = 1000) {
+convert_monoclev2_to_seuv3 <- function(seu, assay = "gene", slot = "data", return_census = FALSE, sig_slice = 5000) {
     # Load Seurat object
     # Extract data, phenotype data, and feature data from the SeuratObject
     # data <- as(as.matrix(seu@assays[["gene"]]@counts), "sparseMatrix")
@@ -405,7 +407,7 @@ process_monocle_child <- function(ptime, monocle_cds, trend_formula = "~sm.ns(Ps
 #' @export
 #'
 #' @examples
-plot_all_ptimes <- function(monocle_list, query_name, sig_slice = 1000, ...) {
+plot_all_ptimes <- function(monocle_list, query_name, sig_slice = 5000, ...) {
     sig_gene_names <- dplyr::filter(monocle_list[[query_name]]$diff_test_res, pval < 0.05) %>%
         dplyr::arrange(pval) %>%
         dplyr::slice(1:sig_slice) %>%
@@ -483,7 +485,8 @@ cross_check_heatmaps <- function(monocle_list, query_name, set_row_order = NULL,
         common_genes <- common_genes[match(set_row_order, common_genes)]
         common_genes <- common_genes[!is.na(common_genes)]
 
-        cluster_rows <- F
+        # cluster_rows <- FALSE
+        cluster_rows <- TRUE
     }
 
 
@@ -631,8 +634,11 @@ arrange_ptime_heatmaps <- function(cds_list, cds_name) {
 #' @export
 #'
 #' @examples
-plot_feature_in_ref_query_ptime <- function(cds_list, selected_cds, features = c("RXRG"), color_by = "State", relative_expr = FALSE, min_expr = 0.5, trend_df = 3, ...) {
-    sub_cds_list <- purrr::map(cds_list, ~ .x$monocle_cds[features, ])
+plot_feature_in_ref_query_ptime <- function(cds_list, selected_cds, features = c("RXRG"), color_by = "State", plot_scale = c("log", "absolute"), min_expr = 0.5, trend_df = 3, ...) {
+
+  plot_scale <- match.arg(plot_scale)
+
+  sub_cds_list <- purrr::map(cds_list, ~ .x$monocle_cds[features, ])
 
     string_NA_meta <- function(cds) {
         # fix metadata with only NA
@@ -649,9 +655,16 @@ plot_feature_in_ref_query_ptime <- function(cds_list, selected_cds, features = c
 
     trend_formula <- paste0("~sm.ns(Pseudotime, df=", trend_df, ")")
 
-    feature_plots_in_ptime <- purrr::map(sub_cds_list, monocle::plot_genes_in_pseudotime, trend_formula = trend_formula, color_by = color_by, relative_expr = relative_expr, min_expr = min_expr)
+    feature_plots_in_ptime <- purrr::map(sub_cds_list, monocle::plot_genes_in_pseudotime, trend_formula = trend_formula, color_by = color_by, relative_expr = FALSE, min_expr = min_expr)
 
-    feature_plots_in_ptime[selected_cds]
+    custom_scale <- if(plot_scale == "absolute"){
+      scale_y_continuous()
+    } else {
+      NULL
+    }
+
+    feature_plots_in_ptime[[selected_cds]] +
+      custom_scale
 
     # refquery_ptime_plot <- cowplot::plot_grid(plotlist = feature_plots_in_ptime, ncol = 2, labels = names(feature_plots_in_ptime))
     #
@@ -822,7 +835,9 @@ calc_pseudotime_heatmap <- function(cds_subset, cluster_rows = TRUE, dend_k = 6,
         cores = cores, trend_formula = trend_formula,
         relative_expr = T, new_data = newdata
     )
-    m <- m[!apply(m, 1, sum) == 0, ]
+    # asdf
+    # # drop every row (gene) that has 0 counts for all cells
+    # m <- m[!apply(m, 1, sum) == 0, ]
     norm_method <- match.arg(norm_method)
     if (norm_method == "vstExprs" && is.null(cds_subset@dispFitInfo[["blind"]]$disp_func) ==
         FALSE) {
@@ -860,7 +875,10 @@ calc_pseudotime_heatmap <- function(cds_subset, cluster_rows = TRUE, dend_k = 6,
 #' @export
 #'
 #' @examples
-plot_pseudotime_heatmap <- function(heatmap_matrix, heatmap_title, dend_k = 6, cluster_rows = T, query_set = T, hmcols = NULL, seriation = F, row_font = 4, heatmap_height = 96, heatmap_width = 8) {
+plot_pseudotime_heatmap <- function(heatmap_matrix, heatmap_title, dend_k = 6,
+                                    cluster_rows = T, query_set = T,
+                                    hmcols = NULL, seriation = F, row_font = 4,
+                                    heatmap_height = 96, heatmap_width = 8) {
     row_dist <- as.dist((1 - cor(Matrix::t(heatmap_matrix))) / 2)
     row_dist[is.na(row_dist)] <- 1
 
@@ -910,7 +928,12 @@ plot_pseudotime_heatmap <- function(heatmap_matrix, heatmap_title, dend_k = 6, c
         heatmap_height = unit(heatmap_height, "cm"),
         heatmap_width = unit(heatmap_width, "cm"),
         column_title = heatmap_title,
-        row_dend_width = unit(4, "cm")
+        row_dend_width = unit(4, "cm"),
+        # temp addition
+        heatmap_legend_param = list(
+          at = c(-4, -2, 0, 2, 4),
+          labels = c("-4","-2", "0", "2", "4"))
+
     )
 
     if (query_set) {

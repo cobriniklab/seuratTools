@@ -281,7 +281,7 @@ update_seuratTools_object <- function(seu_path, feature, resolution = seq(0.2, 2
 
     seurat_version <- seu@misc$experiment$seurat_version
 
-    if (packageVersion("Seurat") == "5.0.0" & (seurat_version < 5 || is.null(seurat_version))) {
+    if (packageVersion("Seurat") == "5.0.0" & (seurat_version < "5.0.0" || is.null(seurat_version))) {
         seu <- convert_v3_to_v5(seu)
     }
 
@@ -313,7 +313,7 @@ update_seuratTools_object <- function(seu_path, feature, resolution = seq(0.2, 2
 
     seuratTools_version <- seu@misc$experiment$seuratTools_version
 
-    seuratTools_version <- ifelse(is.null(seuratTools_version), 0.1, seuratTools_version)
+    seuratTools_version <- ifelse(is.null(seuratTools_version), "0.1.0", seuratTools_version)
 
     # update human gene symbols to grch38
     old_symbol <- "CTC-378H22.2"
@@ -706,7 +706,7 @@ make_seuratTools_clean_names <- function(myvec) {
 convert_v3_to_v5 <- function(seu_v3) {
     seurat_version <- seu_v3@misc$experiment$seurat_version
 
-    if (seurat_version < 5 || is.null(seurat_version)) {
+    if (seurat_version < "5.0.0" || is.null(seurat_version)) {
         meta <- seu_v3@meta.data
 
         seu_v5 <- CreateSeuratObject(counts = seu_v3$gene@counts, data = seu_v3$gene@data, assay = "gene", meta.data = meta)
