@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# seuratTools
+# chevreulSeurat
 
 This package includes a set of Shiny apps for exploring single cell RNA
 datasets processed with
@@ -23,41 +23,41 @@ There are also convenient functions for:
   and
   <a href="https://scvelo.readthedocs.io/" target="_blank" rel="noopener noreferrer">scvelo</a>
 
-> \[!WARNING\] seuratTools was designed for full-length smart-seq based
-> single cell data. Default settings may not be appropriate for droplet
-> (10x) data, though most can be adjusted. Keep in mind [best
+> \[!WARNING\] chevreulSeurat was designed for full-length smart-seq
+> based single cell data. Default settings may not be appropriate for
+> droplet (10x) data, though most can be adjusted. Keep in mind [best
 > practices](https://satijalab.org/seurat/articles/pbmc3k_tutorial)
 > regarding normalization, dimensional reduction, etc. when using.
 
 ## Installation
 
-You can install the released version of seuratTools from
-<a href="https://github.com/whtns/seuratTools" target="_blank" rel="noopener noreferrer">github</a>
+You can install the released version of chevreulSeurat from
+<a href="https://github.com/whtns/chevreulSeurat" target="_blank" rel="noopener noreferrer">github</a>
 with:
 
 ### Install locally and run in three steps:
 
-You can install seuratTools locally using the following steps:
+You can install chevreulSeurat locally using the following steps:
 
 ``` r
 install.packages("devtools")
-devtools::install_github("whtns/seuratTools")
-seuratTools::create_project_db()
+devtools::install_github("whtns/chevreulSeurat")
+chevreulSeurat::create_project_db()
 ```
 
 You can also customize the location of the app using these steps:
 
 ``` r
-devtools::install_github("whtns/seuratTools")
-seuratTools::create_project_db(destdir = "/your/path/to/app")
+devtools::install_github("whtns/chevreulSeurat")
+chevreulSeurat::create_project_db(destdir = "/your/path/to/app")
 ```
 
 ## Getting Started
 
-First, load seuratTools and all other packages required
+First, load chevreulSeurat and all other packages required
 
 ``` r
-library(seuratTools)
+library(chevreulSeurat)
 library(Seurat)
 library(tidyverse)
 library(ggraph)
@@ -65,7 +65,7 @@ library(ggraph)
 
 ## TLDR
 
-seuratTools provides a single command to:
+chevreulSeurat provides a single command to:
 
 - construct a Seurat object
 
@@ -113,7 +113,7 @@ myseu <- CreateSeuratObject(human_count, assay = "gene", meta.data = human_meta)
 
 ## Preprocess the seurat object
 
-seuratTools includes a handy function to preprocess the data that
+chevreulSeurat includes a handy function to preprocess the data that
 handles normalization and scaling required for downstream analysis. If
 needed, parameters can be specified by the user.
 
@@ -126,10 +126,10 @@ identifies highly variable features and scales the data
 
 ## Perform dimension reduction
 
-seuratTools also implements a standardized dimension reduction step to
-select variable features at a user-specified threshold and perform PCA,
-tSNE, and UMAP. The default assay the dimension reduction is being run
-on is “gene”.
+chevreulSeurat also implements a standardized dimension reduction step
+to select variable features at a user-specified threshold and perform
+PCA, tSNE, and UMAP. The default assay the dimension reduction is being
+run on is “gene”.
 
 ``` r
 myseu <- seurat_reduce_dimensions(myseu, assay = "RNA")
@@ -150,7 +150,7 @@ two different sub-functions
 
 ## Split included dataset based on collection technology
 
-seuratTools includes a function, `SplitObject`, which is capable of
+chevreulSeurat includes a function, `SplitObject`, which is capable of
 splitting the dataset into subsets based on a single attribute indicated
 by the split.by argument
 

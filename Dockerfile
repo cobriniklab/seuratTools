@@ -105,7 +105,7 @@ RUN R -e 'install.packages("tidyverse")'
 RUN R -e 'BiocManager::install("InteractiveComplexHeatmap")'
 
 COPY Rprofile.site /usr/local/lib/R/etc/
-RUN R -e 'remotes::install_github("whtns/chevreulSeurat")'
+RUN R -e 'remotes::install_github("cobriniklab/chevreulSeurat")'
 # EXPOSE 3838
 
 # # install shinyproxy package with demo shiny application

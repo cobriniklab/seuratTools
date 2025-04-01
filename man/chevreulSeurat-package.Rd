@@ -11,8 +11,8 @@ Tools for using seurat with single cell projects
 \seealso{
 Useful links:
 \itemize{
-  \item \url{https://github.com/whtns/chevreulSeurat}
-  \item \url{https://whtns.github.io/chevreulSeurat/}
+  \item \url{https://github.com/cobriniklab/chevreulSeurat}
+  \item \url{https://cobriniklab.github.io/chevreulSeurat/}
   \item Report bugs at \url{https://github.com/cobriniklab/chevreulSeurat/issues}
 }
 
