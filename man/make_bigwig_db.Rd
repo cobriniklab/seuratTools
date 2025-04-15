@@ -6,14 +6,14 @@
 \usage{
 make_bigwig_db(
   new_project = NULL,
-  cache_location = "~/.cache/chevreulSeurat/",
+  cache_location = "~/.cache/seuFullLengthViz/",
   sqlite_db = "bw-files.db"
 )
 }
 \arguments{
 \item{new_project}{Project directory}
 
-\item{cache_location}{Path to cache "~/.cache/chevreulSeurat"}
+\item{cache_location}{Path to cache "~/.cache/seuFullLengthViz"}
 
 \item{sqlite_db}{sqlite db containing bw files}
 }

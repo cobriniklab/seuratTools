@@ -10,7 +10,7 @@ minimalSeuratApp(
   appTitle = NULL,
   organism_type = "human",
   futureMb = 13000,
-  bigwig_db = "~/.cache/chevreulSeurat/bw-files.db"
+  bigwig_db = "~/.cache/seuFullLengthViz/bw-files.db"
 )
 }
 \arguments{

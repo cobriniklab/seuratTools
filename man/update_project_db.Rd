@@ -2,11 +2,11 @@
 % Please edit documentation in R/utils.R
 \name{update_project_db}
 \alias{update_project_db}
-\title{Update a database of chevreulSeurat projects}
+\title{Update a database of seuFullLengthViz projects}
 \usage{
 update_project_db(
   projects_dir = NULL,
-  cache_location = "~/.cache/chevreulSeurat",
+  cache_location = "~/.cache/seuFullLengthViz",
   sqlite_db = "single-cell-projects.db",
   verbose = TRUE
 )
@@ -14,7 +14,7 @@ update_project_db(
 \arguments{
 \item{projects_dir}{The project directory to be updated}
 
-\item{cache_location}{Path to cache "~/.cache/chevreulSeurat"}
+\item{cache_location}{Path to cache "~/.cache/seuFullLengthViz"}
 
 \item{sqlite_db}{sqlite db}
 

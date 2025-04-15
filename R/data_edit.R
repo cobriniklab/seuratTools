@@ -10,7 +10,7 @@
 reformatMetadataDRui <- function(id) {
     ns <- NS(id)
     tagList(
-        chevreulSeuratBox(
+        seuFullLengthVizBox(
             title = "Reformat Metadata",
             checkboxInput(ns("header"), "Header", TRUE),
             fileInput(ns("metaFile"), "Choose CSV File of metadata with cell names in first column",

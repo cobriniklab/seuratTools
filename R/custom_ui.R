@@ -28,7 +28,7 @@ default_helper <- function(ui_element, title = "", content = "test", type = "inl
 #' @export
 #'
 #' @examples
-chevreulSeuratBox <- function(title = "", ...) {
+seuFullLengthVizBox <- function(title = "", ...) {
     shinydashboard::box(
         title = title,
         status = "primary",

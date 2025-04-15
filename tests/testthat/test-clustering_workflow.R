@@ -1,3 +1,3 @@
 test_that("clustering of object works", {
-    expect_equal(chevreulSeurat::clustering_workflow(), 4)
+    expect_equal(seuFullLengthViz::clustering_workflow(), 4)
 })

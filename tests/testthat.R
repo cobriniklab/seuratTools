@@ -1,4 +1,4 @@
 library(testthat)
-library(chevreulSeurat)
+library(seuFullLengthViz)
 
-test_check("chevreulSeurat")
+test_check("seuFullLengthViz")
