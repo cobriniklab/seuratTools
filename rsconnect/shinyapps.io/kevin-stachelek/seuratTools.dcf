@@ -1,12 +1,12 @@
-name: seuFullLengthViz
-title: seuFullLengthViz
+name: seuFLViz
+title: seuFLViz
 username:
 account: kevin-stachelek
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 3667409
 bundleId: 4246731
-url: https://kevin-stachelek.shinyapps.io/seuFullLengthViz/
+url: https://kevin-stachelek.shinyapps.io/seuFLViz/
 when: 1613772445.34613
 asMultiple: FALSE
 asStatic: FALSE

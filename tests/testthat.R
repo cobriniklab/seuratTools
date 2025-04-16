@@ -1,4 +1,4 @@
 library(testthat)
-library(seuFullLengthViz)
+library(seuFLViz)
 
-test_check("seuFullLengthViz")
+test_check("seuFLViz")
