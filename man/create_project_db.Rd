@@ -2,21 +2,21 @@
 % Please edit documentation in R/utils.R
 \name{create_project_db}
 \alias{create_project_db}
-\title{Create a database of seuFLViz projects}
+\title{Create a database of seuratTools projects}
 \usage{
 create_project_db(
-  cache_location = "~/.cache/seuFLViz",
+  cache_location = "~/.cache/seuratTools",
   sqlite_db = "single-cell-projects.db",
   verbose = TRUE
 )
 }
 \arguments{
-\item{cache_location}{Path to cache "~/.cache/seuFLViz"}
+\item{cache_location}{Path to cache "~/.cache/seuratTools"}
 
 \item{sqlite_db}{Database to be created}
 
 \item{verbose}{}
 }
 \description{
-Create a database containing seuFLViz projects
+Create a database containing seuratTools projects
 }
