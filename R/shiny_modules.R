@@ -507,7 +507,7 @@ plotDimRedui <- function(id) {
         dropdownButton(
             ns("dimPlotSettings"),
             selectizeInput(ns("embedding"), "Embedding", choices = NULL, selected = NULL),
-            sliderInput(ns("dotSize"), "Size of Points in UMAP", min = 0.5, max = 2, step = 0.1, value = 1),
+            sliderInput(ns("dotSize"), "Size of Points in UMAP", min = 0.5, max = 2, step = 0.1, value = 0.6),
             selectizeInput(ns("dim1"), "Dimension 1", choices = seq(1, 99), selected = 1),
             selectizeInput(ns("dim2"), "Dimension 2", choices = seq(1, 99), selected = 2)
         ),
