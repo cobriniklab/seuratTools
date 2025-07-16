@@ -885,7 +885,7 @@ plot_all_transcripts <- function(seu, features, embedding = "umap", from_gene = 
 
     plot_out <- purrr::map(paste0("transcript_", features), ~ plot_feature(seu,
         embedding = embedding,
-        features = .x, return_plotly = FALSE
+        features = .x, return_plotly = FALSE, pt.size = 0.6
     )) %>%
         purrr::set_names(features)
 

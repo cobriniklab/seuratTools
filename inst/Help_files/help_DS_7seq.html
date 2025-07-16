@@ -1,0 +1,184 @@
+
+<p>
+ This dataset-dedicated Shiny app enables interactive visualization of the human photoreceptor-enriched full-length single-cell RNA-sequencing (FL-scRNA-seq) dataset of <a href="https://elifesciences.org/reviewed-preprints/101918v2" target="_blank">Shayler et al. (2025)</a><sup>1</sup> The underlying single cell data is a streamlined version of Seurat object Shayler_7-seq_public.rds, which is freely available for download at  <a href="https://doi.org/10.5281/zenodo.15231490" target="_blank">Zenodo</a>. The raw data is in GEO (<a href="https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE207802" target="_blank">GSE207802</a>). The dataset-dedicated app was developed by Kevin Stachelek and Bhavana Bhat.
+</p>
+
+<p>
+This Shiny app uses the "seuFLViz" R package ( <a href="https://github.com/cobriniklab/seuFLViz" target="_blank">Github link</a>), developed by Kevin Stachelek and based on the Seurat (V. 3.1.5) R package (<a href="https://satijalab.org/seurat/" target="_blank">link</a>) plus additional FL-scRNA-seq functions. A similar user-friendly Shiny app for exploration of scRNA-seq datasets formatted as SingleCellExperiment objects, called Chevreul, is available as a Bioconductor R package as described in  <a href="https://gigabytejournal.com/articles/158" target="_blank">Stachelek et al. (2025)</a>.<sup>2</sup>
+</p>
+
+<p>
+This Shiny app opens on the <i>Plot Metadata</i> tab, which has two <i>Plot Metadata</i> windows with UMAP plots colored according to high-resolution cluster names and other windows as described in the Function Tabs section below. The Plot Metadata windows allow comparison of different FL-scRNA-seq characteristics (i.e., metadata) overlaying the dimensionally reduced plots. Additional visualization functions are provided by tabs shown on the main menu, at <i>left</i>.
+</p>
+
+<h2>Metadata Variables</h2>
+<p>
+  All tabs enable visualization and analysis of the metadata variables associated with each single cell transcriptome (or 'cell'). The variables are listed in the dropdown menu that appears when clicking the <i>'Variable to Plot'</i> field in the Plot Metadata tab or clicking similarly situated fields in other tabs.  The dropdown menu first lists categorical variables and then numeric variables in the following order:
+</p>
+
+<u> Categorial Variables (which color cells according to category) </u>
+<ul>
+  <li><strong>cluster_names_Res_1.6:</strong> Displays cell clusters produced using the Louvain algorithm at resolution 1.6 and named as in <a href="https://elifesciences.org/reviewed-preprints/101918v2" target="_blank">Shayler et al. (2025)</a>.</li>
+  <li><strong>cluster_names_Res_0.4:</strong> Displays cell clusters produced using the Louvain algorithm at resolution 0.4 and named as in <a href="https://elifesciences.org/reviewed-preprints/101918v2" target="_blank">Shayler et al. (2025)</a>.</li>
+  <li><strong>Fetal_Age:</strong> Indicates the age of the fetal retina for each sample Indicates the age of the fetal retina from which each cell was obtained.</li>
+  <li><strong>Phase:</strong> Displays the cell cycle phase assigned to each cell using the Seurat package. Note, assignments are based on a marker gene list and are not definitive.</li>
+  <li><strong>integrated_snn_res.0.4 to integrated_snn_res.2:</strong> Displays cell clusters produced using the Louvain algorithm at resolutions ranging from 0.4 to 2.0. </li>
+  <li><strong>Batch:</strong> Indicates sequencing run (needed mainly to re-integrate datasets after subsetting)</li>
+</ul>
+
+
+
+<u>Numeric Variables (which shade each cell according to a number or value) </u>
+<ul>
+  <li><strong>Feature:</strong> Displays the expression level of any gene selected in the <i>'Gene expressions...'</i> field.  </li>
+  <li><strong>S.Score:</strong> Displays the S phase cell cycle score assigned to each cell using the Seurat package.</li>
+  <li><strong>G2M.Score:</strong> Displays the G2/M cell cycle score assigned to each cell using the Seurat package. </li>
+  <li><strong>Percentage Mt:</strong> Displays the percentage of reads mapped to mitochondrial ("MT-") genes. </li>
+   <li><strong>nFeature_Gene:</strong> Displays the number of genes detected per cell.</li>
+  <li><strong>nFeature_transcript:</strong> Displays the number of transcripts (i.e., RNA isoforms) detected per cell. </li>
+  <li><strong>nCount_Gene:</strong> Displays the total number of unique mapped reads detected per cell. </li>
+
+<p>The original <a href="https://doi.org/10.5281/zenodo.15231490" target="_blank">Shayler_7-seq_public.rds</a> Seurat object has additional variables related to data acquisition, such as sequencing run, collection (or isolation) method, and retina sample, the distributions of which are shown in <a href="https://elifesciences.org/reviewed-preprints/101918v2" target="_blank">Shayler et al. (2025)</a>, Supplementary Figure 1D-F.1 </p>
+</ul>
+
+<h2>Plot Navigation</h2>
+<p>By default, all plots open by displaying the <i>cluster_names_Res_1.6 variable</i>, which colors groups of cells based on their cluster. To view another variable, click and delete the current variable in the <i>'Variable to Plot'</i> field and select a new one from the dropdown menu. Two or more categorical variables can be selected to group and color cells according their combinations.  When plotting categorical variables (or their combinations), data for specific cell groups can be hidden or shown by clicking or double-clicking their label in the key to the right of the plot.  Moving the cursor over the plot, i) displays cell identies under the cursor, and ii) displays a toolbar at the top right of the plot with various interactive visualization tools, including (from left to right): </p>
+
+    <ul>
+  <li><strong>Download Plot:</strong> Saves the plot as an image file (.svg) to your computer’s Download folder.</li>
+  <li><strong>Zoom:</strong> Click and drag to draw a rectangle and zoom in on a specific region of the plot. Double click on the plot to return to the original view.</li>
+  <li><strong>Pan:</strong> Click on and drag the plot to move the visible area without changing the zoom level.</li>
+  <li><strong>Box Select:</strong> Draw a rectangular selection area to select cells and list their displayed values in the Selected Cells table. Double click on the plot to exit from the selection. This is useful to highlight or analyze a subset of the data.</li>
+  <li><strong>Lasso Select:</strong> Freely draw a custom shape to select cells and list their displayed values in the Selected Cells table. Double click on the plot to exit from the selection.</li>
+  <li><strong>Zoom In:</strong> Incrementally zoom in on the plot's center.</li>
+  <li><strong>Zoom Out:</strong> Incrementally zoom out from the plot's center.</li>
+  <li><strong>Autoscale:</strong> Automatically adjust the axes to fit all data points in the visible area of the plot.</li>
+  <li><strong>Reset axes:</strong> Restore the axes to their original form.</li>
+  <li><strong>Show closest data on hover:</strong> Hover the cursor over cells to display their identities and metadata values. This tool is active by default.</li>
+  <li><strong>Compare data on hover:</strong> Hover the cursor over the plot to display all cell identities at similar x-axis positions. Exit this tool by clicking the 'Show closest data on hover' tool.</li>
+</ul>
+
+
+<h2>Function Tabs </h2>
+<p>
+  Tabs on the <i>left</i>-side menu allow rapid switching between analytical tools and visualizations, including:
+</p>
+<h3>Plot Metadata </h3>
+<p>This tab opens when starting the app and displays the following windows:</p>
+
+<p><strong>Plot Metadata:</strong>  Two Plot Metadata windows with interactive dimensional reduction plots enable visualization and comparison of different cell metadata, such as clusters and gene expression.  For each window, select the variable from the Variable to Plot dropdown menu. To show gene expression, select 'Feature' from the Variable to Plot menu and delete the previously selected gene and enter the gene of interest in the "Gene expression …" field. Genes are annotated according to Ensembl build 87. </p>
+<p><strong> Histogram: </strong> Two Histogram windows produce histograms displaying cell-level numeric variables, such as nCount_Gene, for each cell, in descending order. The histogram bars can be colored according to a chosen categorical variable such as cluster or can be shown as a color gradient for a chosen numeric variable, such as nCount_Gene.  The y-axis can be shown in log or linear scale.</p>
+<p><strong>Clustering Tree:</strong>This window displays cluster relationships at different Louvain clustering resolutions. This can be used to establish how cells redistribute between high and low resolution clusters. There are no user-defined variables. </p>
+<p><strong>Selected Cells:</strong>This table lists cells selected using the Lasso Select or Box Select tools as applied to UMAP plots and reports the metadata values for each selected cell. The cell list can be exported as a .csv file, which can be used for downstream applications, such as Subset analysis (described below). </p>
+
+<h3>Heatmap</h3>
+<p>This tab displays gene expression (after normalization, scaling, and log transformation) of the 50 most variable genes in the dataset (by default) or a user-entered gene set. Cells can be grouped according to a metadata categorical variable (such as cluster_names_Res_1.6) or can be clustered using the Ward, Single, Complete, or Average clustering algorithms   Columns, representing individual cells, can be annotated according to any metadata variable, which will display as different colors for categorical variables and as a color gradient for numeric variables. Rows representing the different genes will be clustered according to the Complete clustering algorithm. </p>
+
+
+<h3>Violin Plot</h3>
+<p>This tab displays gene expression distributions in different cell groups that are defined according to a selected categorical variable (such as cluster_names_Res_1.6) and displayed either as normalized read counts, referred to as “transformed,” or as “raw  counts” (i.e., not normalized). Violin plots show the probability density of the expression values and superimposed box plots show the corresponding summary statistics including median (horizontal line) and interquartile range (box), the values of which appear when hovering the cursor over the plot. Note that the “Categorical variable used to define groups” field will also display numeric variables that cannot be used for violin plots. </p>
+
+<h3>Coverage Plot </h3>
+<p>This tab displays read coverage (i.e., read depth) across all previously catalogued exons of a selected gene, with cells grouped according to a categorical variable of interest and with the results displayed above transcript maps from Ensemble build 87. Users can specify the gene of interest, select a categorical variable by which to group cells (such as cluster), and choose which groups to display. Note that the <i>“Categorical variable used to define groups”</i> field will also display numeric variables that cannot be used for coverage plots. </p>
+<p>A dropdown menu allows users to choose to display coverage in absolute (i.e., linear) or in log10 scales and to choose whether to <i>Collapse Introns</i> (wherein all introns display as 50 bp regardless of size) or not (wherein introns display their true genomic length). When not collapsing introns, the selected gene’s chromosome start and end coordinates from GRCh38 must be entered, omitting commas and chromosome numbers (which are inferred from the selected gene) and limiting total length to < ~20 kb (although this varies according to genomic region). The <i>Summarize coverage to mean</i> option plots mean coverage for each group instead of individual coverage tracks for each cell in the group). </p>
+<p>Plots may require up to ~3 minutes to complete, during which time other gene expression analysis functions cannot operate in the same browser window. When a new plot is being made, prior plots will grey out, an animated loading icon will appear at the bottom of the window (which may require scrolling), and error messages from prior plot attempts can be ignored. Note, some genes may not produce coverage plots due to missing or incomplete coverage or annotation discrepancies in Ensembl 87.</p>
+
+<h3>Differential Expression </h3>
+<p>This tab enables users to perform differential expression analysis at the gene or individual transcript isoform level using t-test, Wilcoxon rank-sum test, likelihood ratio test, or MAST. </p>
+<p>Differential expression comparison groups can be chosen using a metadata categorical variable, where user selects one or more groups within the selected categorical variable for each comparison group. </p>
+<p>Alternatively, differential expression comparison groups can be custom selected by lasso-selecting cells on the dimensional reduction plot and saving the selected cells as a custom group using the <i>“Save to Custom Group”</i> button (rapidly double-clicking on the dimensional reduction plot to reset). Saved custom cell groups can be visualized in <i>Custom Group</i> windows that appear below the <i>Selected Cells</i> window. Before lasso selection, user can control the cell groups that can be displayed and selected by clicking or double-clicking the label for the groups of interest in the dimensional reduction plot legend. </p>
+<p>After performing differential expression analysis, the result will be displayed as a volcano plot showing -log10 adjusted p-value (pAdj) versus log2 fold change (log2FC) and can be downloaded as .csv files. Users can change the pAdj and log2FC cutoff thresholds on the plot and in downloaded spreadsheets. </p>
+<p>Note, differential expression analysis plots may require several minutes to complete and loading the results may be slow on systems with limited processing power. </p>
+<h3>Find Markers </h3>
+<p>This tab enables users to identify marker features for any relevant categorical cell metadata (such as cluster_names_Res_1.6)   Markers are identified by the <i>presto</i> package, which performs Fast Wilcoxon test for differential expression, or by the <i>genesorteR</i> package, which calculates specificity scores.  Users can specify the number of marker genes to display per cell group and pass user-specified pAdj  threshold. A <i>Plot Metadata</i> window is provided to visualize the groups for which markers are sought. </p>
+
+<h3>Subset Dataset </h3>
+<p>This tab enables users to subset the dataset by box- or lasso-selecting cells from dimensional reduced plots in a <i>Plot Metadata</i> window (which populates the <i>Selected Cells</i> window) or by uploading a formatted .csv file with cell IDs in the first column (i.e., the row name column) identical to a subset of those of the original Seurat object. Clicking either of the <i>“Subset Seurat By …”</i> buttons produce a new preprocessed Seurat object with associated dimensional reduction, clustering, marker gene identification, pathway enrichment, and integration. The new object is then used for all analytical tools and visualization tabs. </p>
+<p>This process may take a few minutes to complete and can be interrupted by exiting the app or closing the browser window. Once the app is refreshed or restarted, the subsetting results are removed and the dataset returns to its original state.</p>
+
+<h3>All Transcripts </h3>
+<p>This tab enables users to generate dimensional reduction plots displaying expression levels of all constituent transcripts of a selected gene as cataloged in Ensembl build 87 and predicted by Stringtie (V 1.3.3). Note, since the Ensemble transcript catalog is incomplete (as new isoforms are continuously being identified), the predicted isoform assignments are not definitive; however, they may provide clues to the basis of a gene's differential exon coverage in the <i>Coverage Plots</i> tab. The <i>Transcript Expression per Gene</i> window enables users to visualize each transcript's expression overlaid over the dimensional reduction plot (with plots of the different transcripts viewed by scrolling) and to download corresponding pdf files. The <i>Transcript Composition </i>window generates stacked bar plots displaying the contributions of individual transcripts to the gene's overall expression either as normalized total counts or as the proportion of total counts.</p>
+
+<h3>Monocle</h3>
+<p>The tab enables users to perform monocle3 pseudotime analysis of cells displayed on dimensional reduction plots, either for all cells in the dataset or for specific cell groups defined by a metadata categorical variable or by lasso-selection. Root cells can be specified and features (i.e., genes) that vary significantly over pseudotime based on autocorrelation can be identified and grouped into modules that vary similarly over pseudotime.</p>
+
+<h3>Regress Feature</h3>
+<p>This tab enables users to regress (i.e., remove) the influence of gene sets that have potential to confound expression variation analyses, such as clustering or making dimensional reduction plots, without filtering (i.e., permanently deleting) the affected gene counts, so genes still can be displayed for other visualization functions.  Preset gene lists are provided for regression of cell-cycle, mitochondrial, and apoptosis-related genes.  User defined custom gene list can also be used by editing the <i>‘List of Genes’</i> field. After running regression, preprocessing steps – including dimensional reduction and clustering – are reapplied to the object for analysis in all function tabs.</p>
+<p>This process may take a few minutes to complete and can be interrupted by exiting the app or closing the browser window. Once the app is refreshed or restarted, the regression results are removed and the dataset returns to its original state. </p>
+
+<h3>Reformat Metadata </h3>
+<p>This tab allows users to reformat the dataset’s metadata using the built-in spreadsheet editor to view, filter, and directly edit metadata values in an interactive table.  Editing options include removal of metadata columns or filtering (i.e., removing) rows (i.e., cells) based on user-defined criteria, such as the metadata values in a selected column.  </p>
+<p>Additionally, users may download the .csv metadata spreadsheet, edit as needed (such as adding new columns or removing rows), and re-upload the .csv file, after which the new metadata column names will appear as metadata variable options in the different function tabs.</p>
+<p>The reformatted metadata can be applied to the object by using <i>‘Update Metadata’</i> button. This will automatically update the metadata in all tabs of the Shiny app.  When the app is refreshed or restarted, all custom metadata additions and edits are reverted, and the dataset returns to its original state</p>
+
+<h3>Technical Information </h3>
+<p>Technical information regarding upstream processing, software versions, and dataset features can be viewed here. </p>
+
+<h3>Packages Used</h3>
+<p>Open-source software used in seuFLViz package include:</p>
+
+<table border="1" cellpadding="5" cellspacing="0">
+  <thead>
+    <tr>
+      <th>Package</th>
+      <th>Version</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td>annotables</td><td>0.2.0</td></tr>
+    <tr><td>Biobase</td><td>2.64.0</td></tr>
+    <tr><td>checkmate</td><td>2.3.1</td></tr>
+    <tr><td>clustree</td><td>0.5.1</td></tr>
+    <tr><td>ComplexHeatmap</td><td>2.21.1</td></tr>
+    <tr><td>DataEditR</td><td>0.1.6</td></tr>
+    <tr><td>DBI</td><td>1.2.3</td></tr>
+    <tr><td>dplyr</td><td>1.1.4</td></tr>
+    <tr><td>DT</td><td>0.33</td></tr>
+    <tr><td>ensembldb</td><td>2.27.1</td></tr>
+    <tr><td>formattable</td><td>0.2.1</td></tr>
+    <tr><td>fs</td><td>1.6.5</td></tr>
+    <tr><td>future</td><td>1.33.1</td></tr>
+    <tr><td>genesorteR</td><td>0.4.3</td></tr>
+    <tr><td>ggplot2</td><td>3.5.1</td></tr>
+    <tr><td>ggplotify</td><td>0.1.2</td></tr>
+    <tr><td>ggpubr</td><td>0.6.0</td></tr>
+    <tr><td>glue</td><td>1.8.0</td></tr>
+    <tr><td>httr</td><td>1.4.7</td></tr>
+    <tr><td>janitor</td><td>2.2.0</td></tr>
+    <tr><td>knitr</td><td>1.49</td></tr>
+    <tr><td>LoomExperiment</td><td>1.21.0</td></tr>
+    <tr><td>magrittr</td><td>2.0.3</td></tr>
+    <tr><td>megadepth</td><td>1.13.0</td></tr>
+    <tr><td>monocle3</td><td>1.3.4</td></tr>
+    <tr><td>Nebulosa</td><td>1.13.0</td></tr>
+    <tr><td>patchwork</td><td>1.2.0.9000</td></tr>
+    <tr><td>plotly</td><td>4.10.4</td></tr>
+    <tr><td>presto</td><td>1.0.0</td></tr>
+    <tr><td>R</td><td>2.10</td></tr>
+    <tr><td>Rcpp</td><td>1.0.13.1</td></tr>
+    <tr><td>reticulate</td><td>1.42.0</td></tr>
+    <tr><td>rhandsontable</td><td>0.3.8</td></tr>
+    <tr><td>rlang</td><td>1.1.6</td></tr>
+    <tr><td>rmarkdown</td><td>2.29</td></tr>
+    <tr><td>RSQLite</td><td>2.3.9</td></tr>
+    <tr><td>scater</td><td>1.31.2</td></tr>
+    <tr><td>scran</td><td>1.31.0</td></tr>
+    <tr><td>Seurat</td><td>5.0.1</td></tr>
+    <tr><td>sessioninfo</td><td>1.2.2</td></tr>
+    <tr><td>shiny</td><td>1.10.0</td></tr>
+    <tr><td>shinyFiles</td><td>0.9.3</td></tr>
+    <tr><td>shinyhelper</td><td>0.3.2</td></tr>
+    <tr><td>shinyjs</td><td>2.1.0</td></tr>
+    <tr><td>shinydashboard</td><td>0.7.2</td></tr>
+    <tr><td>shinyWidgets</td><td>0.8.1</td></tr>
+    <tr><td>SingleCellExperiment</td><td>1.25.0</td></tr>
+    <tr><td>testthat</td><td>3.2.1</td></tr>
+    <tr><td>tidyr</td><td>1.3.1</td></tr>
+    <tr><td>tximport</td><td>1.31.0</td></tr>
+    <tr><td>unglue</td><td>0.1.0</td></tr>
+    <tr><td>velociraptor</td><td>1.13.1</td></tr>
+    <tr><td>waiter</td><td>0.2.5</td></tr>
+    <tr><td>wiggleplotr</td><td>1.27.0</td></tr>
+  </tbody>
+</table>
+

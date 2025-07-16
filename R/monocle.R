@@ -90,7 +90,9 @@ convert_seu_to_cds <- function(seu, resolution = 1, min_expression = 0.05) {
     reducedDim(cds_from_seurat, "UMAP") <- Embeddings(seu, "umap")
     # # cds_from_seurat@reducedDims@listData[["UMAP"]] <- Embeddings(seu, "umap")
     # # cds_from_seurat@reducedDims@listData[["PCA"]] <- Embeddings(seu, "pca")
-    cds_from_seurat@preprocess_aux$gene_loadings <- Loadings(seu, "pca")
+
+    # changed from: cds_from_seurat@preprocess_aux$gene_loadings <- Loadings(seu, "pca")
+    cds_from_seurat@reduce_dim_aux$gene_loadings <- Loadings(seu, "pca")
 
     # cds_from_seurat <- learn_graph_by_resolution(cds_from_seurat, seu, resolution = resolution)
 
