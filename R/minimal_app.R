@@ -52,7 +52,7 @@ minimalSeuratApp <- function(object = panc8, loom_path = NULL, appTitle = NULL,
                 #   tabName = "pathwayEnrichment", icon = icon("sitemap")
             ), shinydashboard::menuItem("Find Markers",
                 tabName = "findMarkers", icon = icon("bullhorn")
-            ), shinydashboard::menuItem("Subset Seurat Input",
+            ), shinydashboard::menuItem("Subset Dataset",
                 tabName = "subsetSeurat", icon = icon("filter")
             ), shinydashboard::menuItem("All Transcripts",
                 tabName = "allTranscripts", icon = icon("sliders-h")
@@ -116,14 +116,14 @@ minimalSeuratApp <- function(object = panc8, loom_path = NULL, appTitle = NULL,
             ),
             shinydashboard::tabItem(
                 tabName = "subsetSeurat",
-                h2("Subset Seurat Input") %>%
+                h2("Subset Dataset") %>%
                     default_helper(type = "markdown", content = "subsetSeurat"),
                 plotDimRedui("subset"),
                 seuratToolsBox(
                     title = "Subset Settings",
                     checkboxInput("legacySettingsSubset", "Use Legacy Settings", value = FALSE),
-                    actionButton("subsetAction", "subset seurat by selected cells"),
-                    actionButton("subsetCsv", "subset seurat by uploaded csv"),
+                    actionButton("subsetAction", "subset dataset by selected cells"),
+                    actionButton("subsetCsv", "subset dataset by uploaded csv"),
                     fileInput("uploadCsv",
                         "Upload .csv file with cells to include",
                         accept = c(".csv")
@@ -201,7 +201,7 @@ minimalSeuratApp <- function(object = panc8, loom_path = NULL, appTitle = NULL,
                 techInfoui("techInfo")
             ), shinydashboard::tabItem(
                 tabName = "userHelp",
-                h2("User Help"),
+                h2("Interactive visualization of human photoreceptor-enriched full-length single-cell RNA-sequencing"),
                 userHelpui("userHelp")
             )
         )
@@ -315,7 +315,7 @@ minimalSeuratApp <- function(object = panc8, loom_path = NULL, appTitle = NULL,
 
         callModule(findMarkers, "findmarkers", seu, plot_types, featureType)
 
-        # callModule(pathwayEnrichment, "pathwayEnrichment", seu)
+        callModule(pathwayEnrichment, "pathwayEnrichment", seu)
 
         # plot all transcripts
         observe({
