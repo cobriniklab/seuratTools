@@ -26,16 +26,19 @@ dockerSeuratApp <- function(object = panc8, loom_path = NULL, appTitle = NULL,
         info = TRUE, searching = TRUE, autoWidth = F, ordering = TRUE,
         scrollX = TRUE, language = list(search = "Filter:")
     ))
-    header <- shinydashboard::dashboardHeader(title = appTitle)
+    header <- shinydashboard::dashboardHeader(title = "FL-scRNA seq analysis of Shayler et al.(2025)")
     sidebar <- shinydashboard::dashboardSidebar(
+        tags$a(href="https://elifesciences.org/reviewed-preprints/101918#tab-content", "Check out the related publication here!", target = "_blank"),
         textOutput("appTitle"),
         uiOutput("featureType"),
         shinydashboard::sidebarMenu(
-            shinydashboard::menuItem("Reformat Metadata",
-                tabName = "reformatMetadata", icon = icon("columns")
-            ), shinydashboard::menuItem("Plot Data",
+            shinydashboard::menuItem("User Help",
+                tabName = "userHelp", icon = icon("question-circle")
+            ),  shinydashboard::menuItem("Plot Meta Data",
                 tabName = "comparePlots", icon = icon("chart-bar"), selected = TRUE
-            ), shinydashboard::menuItem("Heatmap/Violin Plots",
+            ), shinydashboard::menuItem("Heatmap",
+                tabName = "heatPlot", icon = icon("sort")
+            ), shinydashboard::menuItem("Violin Plots",
                 tabName = "violinPlots", icon = icon("sort")
             ), shinydashboard::menuItem("Coverage Plots",
                 tabName = "coveragePlots", icon = icon("mountain")
@@ -53,8 +56,10 @@ dockerSeuratApp <- function(object = panc8, loom_path = NULL, appTitle = NULL,
                 tabName = "monocle", icon = icon("bullseye")
             ), shinydashboard::menuItem("Regress Features",
                 tabName = "regressFeatures", icon = icon("eraser")
-            ), shinydashboard::menuItem("Technical Information",
-                tabName = "techInfo", icon = icon("cogs")
+            ), shinydashboard::menuItem("Reformat Metadata",
+                                        tabName = "reformatMetadata", icon = icon("columns")
+            ),shinydashboard::menuItem("Technical Information",
+                                       tabName = "techInfo", icon = icon("cogs")
             )
         ),
         actionButton("changeEmbedAction",
@@ -82,10 +87,13 @@ dockerSeuratApp <- function(object = panc8, loom_path = NULL, appTitle = NULL,
                 plotClustree_UI("clustreePlot")
             ),
             shinydashboard::tabItem(
-                tabName = "violinPlots",
+                tabName = "heatPlot",
                 fluidRow(
                     plotHeatmapui("heatMap")
-                ),
+                )
+            ),
+            shinydashboard::tabItem(
+                tabName = "violinPlots",
                 fluidRow(
                     plotViolinui("violinPlot")
                 )
@@ -143,13 +151,13 @@ dockerSeuratApp <- function(object = panc8, loom_path = NULL, appTitle = NULL,
                 plotDimRedui("diffex"),
                 diffexui("diffex")
             ),
-            shinydashboard::tabItem(
-                tabName = "pathwayEnrichment",
-                h2("Pathway Enrichment"),
-                fluidRow(
-                    pathwayEnrichmentui("pathwayEnrichment")
-                )
-            ),
+            # shinydashboard::tabItem(
+            #     tabName = "pathwayEnrichment",
+            #     h2("Pathway Enrichment"),
+            #     fluidRow(
+            #         pathwayEnrichmentui("pathwayEnrichment")
+            #     )
+            # ),
             shinydashboard::tabItem(
                 tabName = "regressFeatures",
                 fluidRow(
@@ -187,6 +195,10 @@ dockerSeuratApp <- function(object = panc8, loom_path = NULL, appTitle = NULL,
                 tabName = "techInfo",
                 h2("Technical Information"),
                 techInfoui("techInfo")
+            ), shinydashboard::tabItem(
+                tabName = "userHelp",
+                h2("Interactive visualization of human photoreceptor-enriched full-length single-cell RNA-sequencing"),
+                userHelpui("userHelp")
             )
         )
     )
@@ -299,7 +311,7 @@ dockerSeuratApp <- function(object = panc8, loom_path = NULL, appTitle = NULL,
 
         callModule(findMarkers, "findmarkers", seu, plot_types, featureType)
 
-        callModule(pathwayEnrichment, "pathwayEnrichment", seu)
+       # callModule(pathwayEnrichment, "pathwayEnrichment", seu)
 
         # plot all transcripts
         observe({
@@ -455,6 +467,7 @@ dockerSeuratApp <- function(object = panc8, loom_path = NULL, appTitle = NULL,
         })
 
         callModule(techInfo, "techInfo", seu)
+        callModule(userHelp, "userHelp", seu)
     }
     shinyApp(ui, server, enableBookmarking = "server")
 }
