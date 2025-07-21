@@ -227,6 +227,7 @@ plot_pseudotime <- function(cds, resolution, color_cells_by = NULL, genes = NULL
         label_leaves = FALSE,
         label_branch_points = FALSE,
         color_cells_by = color_cells_by,
+        label_principal_points = TRUE,
         cell_size = 0.75
     ) +
         # aes(key = key, cellid = cellid) +
@@ -973,6 +974,9 @@ monocle_module_heatmap <- function(cds, pr_deg_ids, seu_resolution, cells = NULL
     agg_mat <- monocle3::aggregate_gene_expression(cds, heatmap_row_df)
 
     # reorder aggregation matrix by pseudotime
+    cds <- monocle3::order_cells(cds, reduction_method = "UMAP", root_pr_nodes = cells) # needs debugging
+
+
     col_order <- sort(monocle3::pseudotime(cds))
     agg_mat <- agg_mat[, names(col_order)]
 
@@ -1020,6 +1024,16 @@ monocle_module_heatmap <- function(cds, pr_deg_ids, seu_resolution, cells = NULL
         df = groups.use,
         height = unit(group.bar.height, "points"), col = ha_cols
     )
+
+    #test row_ha
+    module_levels <- levels(gene_module_df$module)
+    col <- scales::hue_pal()(length(module_levels))
+    names(col) <- module_levels
+
+    col <- list(module = col[gene_module_df$module])
+
+    row_ha <- ComplexHeatmap::rowAnnotation(module = unique(gene_module_df$module), col = col)
+
 
     module_heatmap <- ComplexHeatmap::Heatmap(as.matrix(agg_mat),
         name = "log expression",

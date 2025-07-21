@@ -315,7 +315,7 @@ minimalSeuratApp <- function(object = panc8, loom_path = NULL, appTitle = NULL,
 
         callModule(findMarkers, "findmarkers", seu, plot_types, featureType)
 
-        callModule(pathwayEnrichment, "pathwayEnrichment", seu)
+        # callModule(pathwayEnrichment, "pathwayEnrichment", seu)
 
         # plot all transcripts
         observe({

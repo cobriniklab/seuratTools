@@ -4,7 +4,7 @@
 </p>
 
 <p>
-This Shiny app uses the "seuFLViz" R package ( <a href="https://github.com/cobriniklab/seuFLViz" target="_blank">Github link</a>), developed by Kevin Stachelek and based on the Seurat (V. 3.1.5) R package (<a href="https://satijalab.org/seurat/" target="_blank">link</a>) plus additional FL-scRNA-seq functions. A similar user-friendly Shiny app for exploration of scRNA-seq datasets formatted as SingleCellExperiment objects, called Chevreul, is available as a Bioconductor R package as described in  <a href="https://gigabytejournal.com/articles/158" target="_blank">Stachelek et al. (2025)</a>.<sup>2</sup>
+This Shiny app uses the <a href="https://github.com/cobriniklab/seuFLViz" target="_blank">"seuFLViz"</a> R package, developed by Kevin Stachelek and based on the <a href="https://satijalab.org/seurat/" target="_blank">Seurat</a> (V. 3.1.5) R package plus additional FL-scRNA-seq functions. A similar user-friendly Shiny app for exploration of scRNA-seq datasets formatted as SingleCellExperiment objects, called Chevreul, is available as a Bioconductor R package as described in  <a href="https://gigabytejournal.com/articles/158" target="_blank">Stachelek et al. (2025)</a>.<sup>2</sup>
 </p>
 
 <p>
@@ -66,7 +66,7 @@ This Shiny app opens on the <i>Plot Metadata</i> tab, which has two <i>Plot Meta
 <h3>Plot Metadata </h3>
 <p>This tab opens when starting the app and displays the following windows:</p>
 
-<p><strong>Plot Metadata:</strong>  Two Plot Metadata windows with interactive dimensional reduction plots enable visualization and comparison of different cell metadata, such as clusters and gene expression.  For each window, select the variable from the Variable to Plot dropdown menu. To show gene expression, select 'Feature' from the Variable to Plot menu and delete the previously selected gene and enter the gene of interest in the "Gene expression …" field. Genes are annotated according to Ensembl build 87. </p>
+<p><strong>Plot Metadata:</strong>  Two Plot Metadata windows with interactive dimensional reduction plots enable visualization and comparison of different cell metadata, such as clusters and gene expression.  For each window, select the variable from the Variable to Plot dropdown menu. To show gene expression, select 'Feature' from the Variable to Plot menu and delete the previously selected gene and enter the gene of interest in the <i>"Gene expression to plot"</i> field. Genes are annotated according to Ensembl build 87. </p>
 <p><strong> Histogram: </strong> Two Histogram windows produce histograms displaying cell-level numeric variables, such as nCount_Gene, for each cell, in descending order. The histogram bars can be colored according to a chosen categorical variable such as cluster or can be shown as a color gradient for a chosen numeric variable, such as nCount_Gene.  The y-axis can be shown in log or linear scale.</p>
 <p><strong>Clustering Tree:</strong>This window displays cluster relationships at different Louvain clustering resolutions. This can be used to establish how cells redistribute between high and low resolution clusters. There are no user-defined variables. </p>
 <p><strong>Selected Cells:</strong>This table lists cells selected using the Lasso Select or Box Select tools as applied to UMAP plots and reports the metadata values for each selected cell. The cell list can be exported as a .csv file, which can be used for downstream applications, such as Subset analysis (described below). </p>
