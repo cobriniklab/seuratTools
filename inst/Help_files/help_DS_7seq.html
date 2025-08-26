@@ -20,17 +20,17 @@ This Shiny app opens on the <i>Plot Metadata</i> tab, which has two <i>Plot Meta
 <ul>
   <li><strong>cluster_names_Res_1.6:</strong> Displays cell clusters produced using the Louvain algorithm at resolution 1.6 and named as in <a href="https://elifesciences.org/reviewed-preprints/101918v2" target="_blank">Shayler et al. (2025)</a>.</li>
   <li><strong>cluster_names_Res_0.4:</strong> Displays cell clusters produced using the Louvain algorithm at resolution 0.4 and named as in <a href="https://elifesciences.org/reviewed-preprints/101918v2" target="_blank">Shayler et al. (2025)</a>.</li>
-  <li><strong>Fetal_Age:</strong> Indicates the age of the fetal retina for each sample Indicates the age of the fetal retina from which each cell was obtained.</li>
+  <li><strong>Fetal_Age:</strong> Indicates the age of the fetal retina from which each cell was obtained.</li>
   <li><strong>Phase:</strong> Displays the cell cycle phase assigned to each cell using the Seurat package. Note, assignments are based on a marker gene list and are not definitive.</li>
   <li><strong>integrated_snn_res.0.4 to integrated_snn_res.2:</strong> Displays cell clusters produced using the Louvain algorithm at resolutions ranging from 0.4 to 2.0. </li>
-  <li><strong>Batch:</strong> Indicates sequencing run (needed mainly to re-integrate datasets after subsetting)</li>
+  <li><strong>Batch:</strong> Indicates sequencing run (needed mainly to re-integrate datasets after subsetting).</li>
 </ul>
 
 
 
 <u>Numeric Variables (which shade each cell according to a number or value) </u>
 <ul>
-  <li><strong>Feature:</strong> Displays the expression level of any gene selected in the <i>'Gene expressions...'</i> field.  </li>
+  <li><strong>Feature:</strong> Displays the expression level of any gene selected in the <i>'Gene expression...'</i> field.  </li>
   <li><strong>S.Score:</strong> Displays the S phase cell cycle score assigned to each cell using the Seurat package.</li>
   <li><strong>G2M.Score:</strong> Displays the G2/M cell cycle score assigned to each cell using the Seurat package. </li>
   <li><strong>Percentage Mt:</strong> Displays the percentage of reads mapped to mitochondrial ("MT-") genes. </li>
@@ -42,7 +42,7 @@ This Shiny app opens on the <i>Plot Metadata</i> tab, which has two <i>Plot Meta
 </ul>
 
 <h2>Plot Navigation</h2>
-<p>By default, all plots open by displaying the <i>cluster_names_Res_1.6 variable</i>, which colors groups of cells based on their cluster. To view another variable, click and delete the current variable in the <i>'Variable to Plot'</i> field and select a new one from the dropdown menu. Two or more categorical variables can be selected to group and color cells according their combinations.  When plotting categorical variables (or their combinations), data for specific cell groups can be hidden or shown by clicking or double-clicking their label in the key to the right of the plot.  Moving the cursor over the plot, i) displays cell identies under the cursor, and ii) displays a toolbar at the top right of the plot with various interactive visualization tools, including (from left to right): </p>
+<p>By default, all plots open by displaying the <i>cluster_names_Res_1.6 variable</i>, which colors groups of cells based on their cluster. To view another variable, click and delete the current variable in the <i>'Variable to Plot'</i> field and select a new one from the dropdown menu. Two or more categorical variables can be selected to group and color cells according to their combinations.  When plotting categorical variables (or their combinations), data for specific cell groups can be hidden or shown by clicking or double-clicking their label in the key to the right of the plot.  Moving the cursor over the plot, i) displays cell identities under the cursor, and ii) displays a toolbar at the top right of the plot with various interactive visualization tools, including (from left to right): </p>
 
     <ul>
   <li><strong>Download Plot:</strong> Saves the plot as an image file (.svg) to your computer’s Download folder.</li>
@@ -72,7 +72,7 @@ This Shiny app opens on the <i>Plot Metadata</i> tab, which has two <i>Plot Meta
 <p><strong>Selected Cells:</strong>This table lists cells selected using the Lasso Select or Box Select tools as applied to UMAP plots and reports the metadata values for each selected cell. The cell list can be exported as a .csv file, which can be used for downstream applications, such as Subset analysis (described below). </p>
 
 <h3>Heatmap</h3>
-<p>This tab displays gene expression (after normalization, scaling, and log transformation) of the 50 most variable genes in the dataset (by default) or a user-entered gene set. Cells can be grouped according to a metadata categorical variable (such as cluster_names_Res_1.6) or can be clustered using the Ward, Single, Complete, or Average clustering algorithms   Columns, representing individual cells, can be annotated according to any metadata variable, which will display as different colors for categorical variables and as a color gradient for numeric variables. Rows representing the different genes will be clustered according to the Complete clustering algorithm. </p>
+<p>This tab displays gene expression (after normalization, scaling, and log transformation) of the 50 most variable genes in the dataset (by default) or a user-entered gene set. Cells can be grouped according to a metadata categorical variable (such as cluster_names_Res_1.6) or can be clustered using the Ward, Single, Complete, or Average clustering algorithms. Columns, representing individual cells, can be annotated according to any metadata variable, which will display as different colors for categorical variables and as a color gradient for numeric variables. Rows representing the different genes will be clustered according to the Complete clustering algorithm. </p>
 
 
 <h3>Violin Plot</h3>
@@ -89,8 +89,9 @@ This Shiny app opens on the <i>Plot Metadata</i> tab, which has two <i>Plot Meta
 <p>Alternatively, differential expression comparison groups can be custom selected by lasso-selecting cells on the dimensional reduction plot and saving the selected cells as a custom group using the <i>“Save to Custom Group”</i> button (rapidly double-clicking on the dimensional reduction plot to reset). Saved custom cell groups can be visualized in <i>Custom Group</i> windows that appear below the <i>Selected Cells</i> window. Before lasso selection, user can control the cell groups that can be displayed and selected by clicking or double-clicking the label for the groups of interest in the dimensional reduction plot legend. </p>
 <p>After performing differential expression analysis, the result will be displayed as a volcano plot showing -log10 adjusted p-value (pAdj) versus log2 fold change (log2FC) and can be downloaded as .csv files. Users can change the pAdj and log2FC cutoff thresholds on the plot and in downloaded spreadsheets. </p>
 <p>Note, differential expression analysis plots may require several minutes to complete and loading the results may be slow on systems with limited processing power. </p>
+
 <h3>Find Markers </h3>
-<p>This tab enables users to identify marker features for any relevant categorical cell metadata (such as cluster_names_Res_1.6)   Markers are identified by the <i>presto</i> package, which performs Fast Wilcoxon test for differential expression, or by the <i>genesorteR</i> package, which calculates specificity scores.  Users can specify the number of marker genes to display per cell group and pass user-specified pAdj  threshold. A <i>Plot Metadata</i> window is provided to visualize the groups for which markers are sought. </p>
+<p>This tab enables users to identify marker features for any relevant categorical cell metadata (such as cluster_names_Res_1.6)   Markers are identified by the <i>presto</i> package, which performs Fast Wilcoxon test for differential expression, or by the <i>genesorteR</i> package, which calculates specificity scores.  Users can specify the number of marker genes to display per cell group that pass user-specified pAdj  threshold. A <i>Plot Metadata</i> window is provided to visualize the groups for which markers are sought. </p>
 
 <h3>Subset Dataset </h3>
 <p>This tab enables users to subset the dataset by box- or lasso-selecting cells from dimensional reduced plots in a <i>Plot Metadata</i> window (which populates the <i>Selected Cells</i> window) or by uploading a formatted .csv file with cell IDs in the first column (i.e., the row name column) identical to a subset of those of the original Seurat object. Clicking either of the <i>“Subset Seurat By …”</i> buttons produce a new preprocessed Seurat object with associated dimensional reduction, clustering, marker gene identification, pathway enrichment, and integration. The new object is then used for all analytical tools and visualization tabs. </p>
