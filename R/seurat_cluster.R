@@ -61,33 +61,36 @@ seurat_preprocess <- function(assay, scale = TRUE, normalize = TRUE, features = 
 #' markers_stashed_seu <- find_all_markers(panc8)
 #' marker_genes <- Misc(markers_stashed_seu, "markers")
 #' str(marker_genes)
-find_all_markers <- function(seu, metavar = NULL, seurat_assay = "gene", ...) {
+find_all_markers <- function (seu, metavar = NULL, seurat_assay = "gene", ...) 
+{
     if (is.null(metavar)) {
-        resolutions <- colnames(seu[[]])[grepl(paste0(seurat_assay, "_snn_res."), colnames(seu[[]]))]
-
-        cluster_index <- grepl(paste0(seurat_assay, "_snn_res."), colnames(seu[[]]))
-
+        resolutions <- colnames(seu[[]])[grepl(paste0(seurat_assay, 
+            "_snn_res."), colnames(seu[[]]))]
+        cluster_index <- grepl(paste0(seurat_assay, "_snn_res."), 
+            colnames(seu[[]]))
         if (!any(cluster_index)) {
             warning("no clusters found in metadata. runnings seurat_cluster")
-            seu <- seurat_cluster(seu, resolution = seq(0.2, 2.0, by = 0.2))
+            seu <- seurat_cluster(seu, resolution = seq(0.2, 
+                2, by = 0.2))
         }
-
         clusters <- seu[[]][, cluster_index]
+        if (is.data.frame(clusters)) {
+            cluster_levels <- purrr::map_int(clusters, ~length(unique(.x)))
+            cluster_levels <- cluster_levels[cluster_levels > 1]
+            clusters <- dplyr::select(clusters, dplyr::one_of(names(cluster_levels)))
+            metavar <- names(clusters)
+        } else {
+            metavar <- resolutions
+        }
+        
 
-        cluster_levels <- purrr::map_int(clusters, ~ length(unique(.x)))
-        cluster_levels <- cluster_levels[cluster_levels > 1]
-
-        clusters <- dplyr::select(clusters, dplyr::one_of(names(cluster_levels)))
-        metavar <- names(clusters)
     }
-
-    new_markers <- purrr::map(metavar, stash_marker_features, seu, seurat_assay = seurat_assay, ...)
+    new_markers <- purrr::map(metavar, stash_marker_features, 
+        seu, seurat_assay = seurat_assay, ...)
     names(new_markers) <- metavar
-
-    old_markers <- seu@misc$markers[!names(seu@misc$markers) %in% names(new_markers)]
-
+    old_markers <- seu@misc$markers[!names(seu@misc$markers) %in% 
+        names(new_markers)]
     seu@misc$markers <- c(old_markers, new_markers)
-
     return(seu)
 }
 
