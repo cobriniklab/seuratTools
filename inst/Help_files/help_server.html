@@ -1,0 +1,121 @@
+<h2>Cobrinik Lab Shiny Server App</h2>
+<p>
+  This Shiny app is designed for interactive visualization of a single-cell dataset from Cobrinik Lab. </p>
+<p>
+  The project of intrest choosen in the previous "Index of/" page is automatically loaded to the shiny app. If required, the user can choose a different project using the "Select Project to load" dropdown menu and the "load selected project" button.
+    </p>
+<p>
+  Once the project is selected, the "Load Seurat Dataset" button lets the user choose a seurat object to be loaded from all the avaible objects in the the "/output/seurat/" folder in the project.
+
+  Uploading data may take a minute as indicated by th eprogress bar at the bottom right corner of the screen.
+</p>
+
+
+<h3>Plot Navigation</h3>
+<p>The plots have different features as explained below:</p>
+<ul>
+  <li>
+    By default, every plot will display the first variable column in the metadata. If you want to see a different variable, simply remove the current one and pick a new variable from the dropdown menu. You can also select two or more variables at once to plot their combinations. To focus on specific data, click on the variable names in the legend—this will hide or show the corresponding data points, making it easy to highlight only cells of interest.
+  </li>
+  <li>
+    When you move your cursor over the plot, a toolbar appears in the top right corner of the plot. This toolbar offers several interactive tools to help you explore and interact with the data. From left to right, these tools are:
+    <ul>
+      <li><strong>Download Plot:</strong> Save the current plot as an image file (SVG) to your computer.</li>
+      <li><strong>Zoom:</strong> Click and drag to draw a rectangle and zoom in on a specific region of the plot for a closer look.</li>
+      <li><strong>Pan:</strong> Click and drag to move the visible area of the plot around without changing the zoom level.</li>
+      <li><strong>Box Select:</strong> Select multiple cells by drawing a rectangular selection area. Double click on the plot to exit from selection.</li>
+      <li><strong>Lasso Select:</strong> Select multiple cells by freely drawing a custom shape around them. Double click on the plot to exit from selection.</li>
+      <li><strong>Zoom In:</strong> Incrementally zoom in on the plot's center each time you click this button.</li>
+      <li><strong>Zoom Out:</strong> Incrementally zoom out on the plot's center each time you click this button.</li>
+      <li><strong>Autoscale:</strong> Automatically adjust the axes to fit all data points within the visible area of the plot.</li>
+      <li><strong>Reset axes:</strong> Restore the axes to their original form.</li>
+      <li><strong>Show closest data on hover:</strong> Hover the cursor on top of cells to display cell identities.</li>
+      <li><strong>Compare data on hover:</strong> When hovering, tooltips display all cell identities at the same x-position.</li>
+    </ul>
+  </li>
+</ul>
+
+<h3>Tab Navigation</h3>
+<p>
+  seuratApp organizes its features into clearly labeled tabs on the right, making it easy to switch between different analytical tools and visualizations.
+</p>
+
+<ul>
+  <li>
+    <h4><b>Plot Data</b></h4>
+    <b>This tab visualizes data in various different plots.</b>
+    <p><b>Plot Meta Data:</b> Provides interactive dimensional reduction plots, through which users can visualize cell metadata, examine clustering results, and overlay gene expression data by selecting the 'Feature' variable—making it simple to gain insights from complex datasets.</p>
+    <p><b>Histogram:</b> Histogram of summarized cell-level UMI and read count values can be overlaid alongside cell metadata and clustering results, enabling users to assess data quality through interactive visualizations.</p>
+    <p><b>Clustering Tree:</b> A cluster tree of cell identities is displayed. This plot can be used to help establish an optimal clustering resolution.</p>
+  </li>
+
+  <li>
+    <h4><b>Heatmap/Violin Plot</b></h4>
+    <b>Generate heatmap or violin plots.</b>
+    <p><b>Heatmap:</b> The heatmap visualizes gene expression after normalization, scaling, and log transformation. Users can arrange columns by clustering results or metadata. The default display highlights the 50 most variable genes, though any specified gene set can be visualized in the order listed.</p>
+    <p><b>Violin Plot:</b> Gene expression can be interactively visualized with violin plots, grouping cells according to sample metadata. Violin plots combine the distribution insights of density plots with the summary statistics of box plots, clearly showing the probability density of expression values across different groups. The plot highlights the median (horizontal line) and the interquartile range (box), and users can also customize the display by selecting the data type (transformed or raw) for analysis.</p>
+  </li>
+
+  <li>
+    <h4><b>Coverage Plots</b></h4>
+    <b>View coverage across features.</b>
+    <p>Fine-grained analysis of isoform contributions is enabled by plotting absolute read coverage across a selected gene, visually representing read depths for all transcripts from different cell groups within the genomic region. Users can specify the gene of interest, select a variable to group cells by, and choose which groups to display.</p>
+  </li>
+
+  <li>
+    <h4><b>Differential Expression</b></h4>
+    <b>Identify differentially expressed genes.</b>
+    <p>With seuratTools, users can perform differential expression analysis using multiple methods: t-test, Wilcoxon rank-sum test, likelihood ratio test, and MAST. Groups can be chosen for differential expression either through object metadata or using the custom cluster option where the user can lasso select cells of interest on the dimred plot and save the selected cells as clusters. It will take a few minutes (~5-10 mins) to run differential expression.</p>
+    <p>A volcano plot is used to visualize differential expression results, showing P value versus fold change. Users can modify the log2FC and P value cutoffs to define significance thresholds using interactive controls.</p>
+  </li>
+
+  <li>
+    <h4><b>Find Markers</b></h4>
+    <b>Find marker genes for clusters.</b>
+    <p>Marker features can be defined using cluster identities, or any relevant cell metadata. These markers are identified through statistical tests such as the Wilcoxon rank-sum test, or by evaluating cluster specificity with tools like genesorteR. Users can specify the number of marker genes per cell group by setting thresholds for adjusted p-value and log fold change, tailoring the analysis to their needs.</p>
+  </li>
+
+  <li>
+    <h4><b>Subset Seurat Input</b></h4>
+    <b>Subset the Seurat object.</b>
+    <p>seuratTools streamlines the process of subsetting the dataset. Users can subset interactively by lasso-selecting cells from dimensionally reduced plots or by specifying a formatted .csv file. Following any subset operation, all relevant preprocessing steps—including dimensional reduction, clustering, marker gene identification, pathway enrichment, and integration based on a batch variable—are automatically renewed for the new dataset.</p>
+    <p>This process may take a few minutes to complete. Once the app is refreshed or restarted, subsetting results are reverted, and the dataset returns to its original state in order to preserve the integrity of the original dataset.</p>
+  </li>
+
+  <li>
+    <h4><b>All Transcripts</b></h4>
+    <b>View all transcripts.</b>
+    <p>It is possible to generate dimensional reduction plots that visualize the expression of all constituent transcripts (labeled by Ensembl transcript IDs) for a selected gene, providing a comprehensive view of transcript-level expression patterns across cell populations.</p>
+    <p>Stacked bar plots enable users to visualize and compare the relative contributions of individual transcripts to gene expression, providing insight into which transcripts play the largest role for each gene.</p>
+  </li>
+
+  <li>
+    <h4><b>Monocle</b></h4>
+    <b>Perform trajectory analysis with Monocle.</b>
+    <p>Pseudotime analysis is broken into several steps, mirroring a typical command-line workflow.</p>
+    <ul>
+      <li>Users can subset an embedded dataset then calculate a trajectory graph.</li>
+      <li>Root cells can be specified and cells ordered in pseudotime with monocle3.</li>
+      <li>Features that vary significantly over pseudotime based on autocorrelation can then be determined and grouped into modules that vary similarly over pseudotime.</li>
+    </ul>
+  </li>
+
+  <li>
+    <h4><b>Regress Features</b></h4>
+    <b>Regress out features.</b>
+    <p>Expression variation due to confounding factors can be addressed by regressing out the influence of relevant gene sets, rather than filtering out affected counts. seuratTools supports this with preset gene lists for cell-cycle, mitochondrial, and apoptosis-related genes, allowing flexible correction for a range of biological processes.</p>
+  </li>
+
+  <li>
+    <h4><b>Reformat Metadata</b></h4>
+    <b>Reformat metadata for downstream analysis.</b>
+    <p>The dataset’s metadata can be flexibly reformatted by appending new variables derived from exploratory analysis. Users may upload a CSV file with cell IDs as row names and new metadata variables as columns, or use the built-in spreadsheet editor to view, filter, and directly edit metadata values in an interactive table.</p>
+    <p>However, when the app is refreshed or restarted, all custom metadata additions and edits are reverted, and the dataset returns to its original state in order to preserve the integrity of the original dataset.</p>
+  </li>
+
+  <li>
+    <h4><b>Technical Information</b></h4>
+    <b>View technical details.</b>
+    <p>Technical information regarding upstream processing, software version numbers, and dataset features can be viewed here.</p>
+  </li>
+</ul>

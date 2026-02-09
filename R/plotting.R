@@ -352,6 +352,40 @@ plot_violin <- function(seu, plot_var = "batch", plot_vals = NULL, features = "R
     print(vln_plot)
 }
 
+#' Plot Dot plot
+#'
+#' Plots a Dot plot of a single data (gene expression, metrics, etc.)
+#' grouped by a metadata variable
+#'
+#' @param seu A Seurat object
+#' @param plot_var Variable to group (color) cells by
+#' @param plot_vals Select groups within the variable to plot
+#' @param features Features to plot
+#' @param assay Name of assay to use, defaults to the active assay
+#' @param ...
+#'
+#' @return
+#' @export
+#'
+#' @examples
+#'
+#' plot_dot(human_gene_transcript_seu, plot_var = "batch", features = c("NRL", "GNAT2"))
+#'
+plot_dot <- function(seu, plot_var = "batch", plot_vals = NULL, features = "RXRG", assay = "gene", ...) {
+    if (is.null(plot_vals)) {
+        plot_vals <- unique(seu[[]][[plot_var]])
+        plot_vals <- plot_vals[!is.na(plot_vals)]
+    }
+
+    seu <- seu[, seu[[]][[plot_var]] %in% plot_vals]
+
+
+    dot_plot <- Seurat::DotPlot(seu, features = features, group.by = plot_var, assay = assay,  ...)
+
+    print(dot_plot)
+}
+
+
 
 #' Plot Feature
 #'

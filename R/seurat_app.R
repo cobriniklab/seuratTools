@@ -257,14 +257,22 @@ seuratApp <- function(preset_project, appTitle = "seuratTools", organism_type = 
         ),
         verbatimTextOutput("savefile"),
         shinydashboard::sidebarMenu(
-            shinydashboard::menuItem("Integrate Projects",
+            shinydashboard::menuItem("Seurat dataset info",
+                tabName = "dataInfo", icon = icon("question-circle")
+            ),shinydashboard::menuItem("User Help",
+                tabName = "userHelp", icon = icon("question-circle")
+            ),shinydashboard::menuItem("Integrate Projects",
                 tabName = "integrateProjects", icon = icon("object-group")
             ), shinydashboard::menuItem("Reformat Metadata",
                 tabName = "reformatMetadataDR", icon = icon("columns")
             ), shinydashboard::menuItem("Plot Data",
                 tabName = "comparePlots", icon = icon("chart-bar"), selected = TRUE
-            ), shinydashboard::menuItem("Heatmap/Violin Plots",
+            ), shinydashboard::menuItem("Violin Plots",
                 tabName = "violinPlots", icon = icon("sort")
+            ), shinydashboard::menuItem("Dot Plots",
+                                     tabName = "dotPlots", icon = icon("dot-circle")
+            ), shinydashboard::menuItem("Heatmap Plots",
+                tabName = "heatPlots", icon = icon("th")
             ), shinydashboard::menuItem("Coverage Plots",
                 tabName = "coveragePlots", icon = icon("mountain")
             ), shinydashboard::menuItem("Differential Expression",
@@ -314,10 +322,19 @@ seuratApp <- function(preset_project, appTitle = "seuratTools", organism_type = 
             shinydashboard::tabItem(
                 tabName = "violinPlots",
                 fluidRow(
-                    plotHeatmapui("heatMap")
-                ),
-                fluidRow(
                     plotViolinui("violinPlot")
+                )
+            ),
+            shinydashboard::tabItem(
+                tabName = "dotPlots",
+                fluidRow(
+                    plotDotui("dotPlot")
+                )
+            ),
+            shinydashboard::tabItem(
+                tabName = "heatPlots",
+                fluidRow(
+                    plotHeatmapui("heatMap")
                 )
             ),
             shinydashboard::tabItem(
@@ -432,6 +449,14 @@ seuratApp <- function(preset_project, appTitle = "seuratTools", organism_type = 
                 h2("Technical Information"),
                 h3(paste0("seuratTools version: ", packageVersion("seuratTools"))),
                 techInfoui("techInfo")
+            ),  shinydashboard::tabItem(
+                tabName = "userHelp",
+                h2("Interactive visualization of single-cell RNA-sequencing datasets"),
+                uiOutput("help_user")
+            ), shinydashboard::tabItem(
+                tabName = "dataInfo",
+                h2("Seurat dataset Information"),
+                dataInfoui("dataInfo")
             )
         )
     )
@@ -676,6 +701,10 @@ seuratApp <- function(preset_project, appTitle = "seuratTools", organism_type = 
             organism_type
         )
         callModule(
+            plotDot, "dotPlot", seu, featureType,
+            organism_type
+        )
+        callModule(
             plotHeatmap, "heatMap", seu, featureType,
             organism_type
         )
@@ -886,6 +915,13 @@ seuratApp <- function(preset_project, appTitle = "seuratTools", organism_type = 
         })
 
         callModule(techInfo, "techInfo", seu)
+        callModule(dataInfo, "dataInfo", seu)
+
+        output$help_user <- renderUI({
+            html_path <- system.file("Help_files", "help_server.html", package = "seuratTools")
+            HTML(paste(readLines(html_path), collapse = "\n"))
+        })
+
 
         sessionId <- as.integer(runif(1, 1, 100000))
         output$sessionId <- renderText(paste0("Session id: ", sessionId))

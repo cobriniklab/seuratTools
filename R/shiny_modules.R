@@ -67,7 +67,9 @@ plotViolinui <- function(id) {
                 "Gene expression by which to color the plot eg. 'RXRG'",
                 choices = NULL, multiple = TRUE
             ),
+            uiOutput(ns("vln_displayui")),
             radioButtons(ns("slot"), "Data Type", choices = c("transformed" = "data", "raw counts" = "counts")),
+            actionButton(ns("actionViolin"), "Plot Violin Map"),
             downloadButton(ns("downloadPlot")),
             plotly::plotlyOutput(ns("vplot"), height = 750),
             width = 11
@@ -124,13 +126,37 @@ plotViolin <- function(input, output, session, seu, featureType, organism_type) 
             choices = colnames(seu()[[]]), selected = "cluster_names_Res_1.6"
         )
     })
+    vln_display <- reactive({
+        req(input$vlnGroup)
+        req(seu())
+        unique(seu()[][[input$vlnGroup]])
+    })
 
-    vln_plot <- reactive({
+    output$vln_displayui <- renderUI({
+        req(input$vlnGroup)
+        selectizeInput(ns("vln_display"), "Grous to display",
+                       choices = vln_display(), multiple = TRUE)
+    })
+
+
+    vln_plot <- eventReactive(input$actionViolin,{
         req(input$customFeature)
         req(input$vlnGroup)
 
-        vln_plot <-
-            plot_violin(seu(), plot_var = input$vlnGroup, features = input$customFeature, slot = input$slot)
+
+        seurat_obj <- seu()
+        seurat_obj[[input$vlnGroup]] <- factor(
+            seurat_obj[[input$vlnGroup]][[1]],
+            levels = input$vln_display
+        )
+
+        vln_plot <- plot_violin(
+            seurat_obj,
+            plot_var = input$vlnGroup,
+            plot_vals = input$vln_display,
+            features = input$customFeature,
+            slot = input$slot
+        )
     })
 
     output$downloadPlot <- downloadHandler(
@@ -156,6 +182,145 @@ plotViolin <- function(input, output, session, seu, featureType, organism_type) 
     })
 }
 
+####CUT
+
+#' Title
+#'
+#' @param id
+#'
+#' @return
+#' @export
+#'
+#' @examples
+
+plotDotui <- function(id) {
+    ns <- NS(id)
+    tagList(
+        seuratToolsBox(
+            title = "Dot Plots",
+            uiOutput(ns("dot_group")),
+            selectizeInput(ns("customFeature"),
+                           "Gene expression by which to color the plot eg. 'RXRG'",
+                           choices = NULL, multiple = TRUE
+            ),
+            uiOutput(ns("dot_displayui")),
+            # radioButtons(ns("slot"), "Data Type", choices = c("transformed" = "data", "raw counts" = "counts")),
+            actionButton(ns("actionDot"), "Plot Dot Plot"),
+            downloadButton(ns("downloadPlot")),
+            plotly::plotlyOutput(ns("dplot"), height = 750),
+            width = 11
+        ) %>%
+            default_helper(type = "markdown", content = "violinPlot", size = "l")
+    )
+}
+
+#' Plot Violin Server
+#'
+#' Plots a Violin plot of a single data (gene expression, metrics, etc.) in the server Seurat app.
+#'
+#' @param input
+#' @param output
+#' @param session
+#' @param seu Seurat object
+#' @param featureType Gene or Transcript
+#' @param organism_type Organism
+#'
+#' @return
+#' @export
+#'
+#' @examples
+plotDot <- function(input, output, session, seu, featureType, organism_type) {
+    ns <- session$ns
+    prefill_feature <- reactive({
+        req(featureType())
+        if (featureType() == "transcript") {
+            if (organism_type() == "human") {
+                "ENST00000488147"
+            } else if (organism_type() == "mouse") {
+                "ENSG00000488147"
+            }
+        } else if (featureType() == "gene") {
+            if (organism_type() == "human") {
+                "RXRG"
+            } else if (organism_type() == "mouse") {
+                "Rxrg"
+            }
+        }
+    })
+    observe({
+        req(prefill_feature())
+        req(seu())
+        updateSelectizeInput(session, "customFeature",
+                             choices = unique(unlist(map(seu()@assays, rownames))),
+                             selected = prefill_feature(), server = TRUE
+        )
+    })
+
+    output$dot_group <- renderUI({
+        req(seu())
+        selectizeInput(ns("dotGroup"), "Categorical variable used to define groups",
+                       choices = colnames(seu()[[]]), selected = "cluster_names_Res_1.6"
+        )
+    })
+    dot_display <- reactive({
+        req(input$dotGroup)
+        req(seu())
+        unique(seu()[][[input$dotGroup]])
+    })
+
+    output$dot_displayui <- renderUI({
+        req(input$dotGroup)
+        selectizeInput(ns("dot_display"), "Grous to display",
+                       choices = dot_display(), multiple = TRUE)
+    })
+
+
+    dot_plot <- eventReactive(input$actionDot,{
+        req(input$customFeature)
+        req(input$dotGroup)
+
+        seurat_obj <- seu()
+        seurat_obj[[input$dotGroup]] <- factor(
+            seurat_obj[[input$dotGroup]][[1]],
+            levels = input$dot_display
+        )
+
+        dot_plot <- plot_dot(
+            seurat_obj,
+            plot_var = input$dotGroup,
+            plot_vals = input$dot_display,
+            features = input$customFeature
+        ) + RotatedAxis()
+
+    })
+
+
+
+
+    output$downloadPlot <- downloadHandler(
+        filename = function() {
+            paste("Dot", ".pdf", sep = "")
+        },
+        content = function(file) {
+            ggsave(file, dot_plot() + ggpubr::theme_pubr(base_size = 20, x.text.angle = 45), width = 16, height = 12)
+        }
+    )
+
+    output$dplot <- plotly::renderPlotly({
+        req(seu())
+        req(input$dotGroup)
+        exclude_trace_number <- length(unique(seu()[[]][[input$dotGroup]])) * 2
+
+        dot_plot <- plotly::ggplotly(dot_plot(), height = 700) %>%
+            plotly::style(opacity = 0.5) %>%
+            plotly::style(hoverinfo = "skip", traces = c(1:exclude_trace_number)) %>%
+            plotly_settings(width = 1200) %>%
+            plotly::toWebGL() %>%
+            identity()
+    })
+}
+
+####CUT
 
 #' Plot Heatmap ui
 #'
@@ -2390,6 +2555,60 @@ techInfo <- function(input, output, session, seu) {
     })
 }
 
+
+#' Title
+#'
+#' @param id
+#'
+#' @return
+#' @export
+#'
+#' @examples
+dataInfoui <- function(id) {
+    ns <- NS(id)
+    fluidRow(
+        seuratToolsBox(
+            title = "Information about the seurat object",
+            htmlOutput(ns("data_info_general")),
+            width = 12
+        )
+    )
+}
+
+#' Title
+#'
+#' @param input
+#' @param output
+#' @param session
+#' @param seu
+#'
+#' @return
+#' @export
+#'
+#' @examples
+dataInfo <- function(input, output, session, seu) {
+    ns <- session$ns
+
+    misc <- reactive({
+        req(seu())
+        Seurat::Misc(seu())
+    })
+
+    observe({
+        # general info
+        output$data_info_general <- renderText({
+            info <- paste0(
+                "<strong><u>Selected dataset</u></strong>",
+                "<ul>",
+
+                misc()$details
+
+            )
+        })
+
+    })
+}
+
 #' Title
 #'
 #' @param id
@@ -2556,5 +2775,6 @@ userHelp <- function(input, output, session, seu = NULL) {
         HTML(paste(readLines(html_path), collapse = "\n"))
         }
     )}
+
 
 
