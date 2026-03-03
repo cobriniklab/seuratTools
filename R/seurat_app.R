@@ -225,7 +225,7 @@ prep_slider_values <- function(default_val) {
 #' @export
 #'
 #' @examples
-seuratApp <- function(preset_project, appTitle = "seuratTools", organism_type = "human", bigwig_db = "~/.cache/seuratTools/bw-files.db", db_path = "~/.cache/seuratTools/single-cell-projects.db", futureMb = 13000) {
+seuratApp <- function(preset_project, appTitle = "seuratTools", organism_type = "human", bigwig_db = "~/.cache/seuratTools/bw-files.db", db_path = "/home/shiny/.cache/seuratTools/single-cell-projects.db", futureMb = 13000) {
     print(packageVersion("seuratTools"))
     future::plan(strategy = "multicore", workers = 6)
     future_size <- futureMb * 1024^2
@@ -238,10 +238,12 @@ seuratApp <- function(preset_project, appTitle = "seuratTools", organism_type = 
     ))
     header <- shinydashboard::dashboardHeader(title = appTitle)
     sidebar <- shinydashboard::dashboardSidebar(
+        tags$h4(textOutput("appTitle")),
         uiOutput("projInput"),
         actionButton("loadProject", "Load Selected Project") %>%
             default_helper(type = "markdown", content = "overview"),
-        textOutput("appTitle"),
+
+        # textOutput("appTitle"),
         bookmarkButton(),
         shinyWidgets::prettyRadioButtons("organism_type",
             inline = TRUE,
@@ -516,7 +518,7 @@ seuratApp <- function(preset_project, appTitle = "seuratTools", organism_type = 
         })
 
         output$projInput <- renderUI({
-            selectizeInput("setProject", "Select Project to Load",
+            selectizeInput("setProject", "Select Different Project to Load",
                 choices = projList(), selected = preset_project,
                 multiple = F
             )
@@ -542,6 +544,7 @@ seuratApp <- function(preset_project, appTitle = "seuratTools", organism_type = 
         observeEvent(input$loadProject, {
             proj_dir(input$setProject)
         })
+
         output$appTitle <- renderText({
             req(proj_dir())
             paste0("Loaded Project: ", fs::path_file(proj_dir()))

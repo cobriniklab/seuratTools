@@ -100,7 +100,8 @@ load_meta <- function(proj_dir) {
 #' @examples
 seu_from_tximport <- function(txi, meta_tbl, ...) {
     gene_expression <- as.matrix(txi$gene$counts)
-    expid <- gsub("-[0-9]*", "", colnames(gene_expression))
+    # expid <- gsub("-[0-9]*", "", colnames(gene_expression))
+    expid <- "SeuratProject"
 
     featuredata <- data.frame(
         feature = rownames(gene_expression),
