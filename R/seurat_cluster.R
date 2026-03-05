@@ -61,16 +61,17 @@ seurat_preprocess <- function(assay, scale = TRUE, normalize = TRUE, features = 
 #' markers_stashed_seu <- find_all_markers(panc8)
 #' marker_genes <- Misc(markers_stashed_seu, "markers")
 #' str(marker_genes)
-find_all_markers <- function (seu, metavar = NULL, seurat_assay = "gene", ...) 
+find_all_markers <- function (seu, metavar = NULL, seurat_assay = "gene", ...)
 {
+    seu[[seurat_assay]] <- JoinLayers(seu[[seurat_assay]])
     if (is.null(metavar)) {
-        resolutions <- colnames(seu[[]])[grepl(paste0(seurat_assay, 
+        resolutions <- colnames(seu[[]])[grepl(paste0(seurat_assay,
             "_snn_res."), colnames(seu[[]]))]
-        cluster_index <- grepl(paste0(seurat_assay, "_snn_res."), 
+        cluster_index <- grepl(paste0(seurat_assay, "_snn_res."),
             colnames(seu[[]]))
         if (!any(cluster_index)) {
             warning("no clusters found in metadata. runnings seurat_cluster")
-            seu <- seurat_cluster(seu, resolution = seq(0.2, 
+            seu <- seurat_cluster(seu, resolution = seq(0.2,
                 2, by = 0.2))
         }
         clusters <- seu[[]][, cluster_index]
@@ -82,13 +83,13 @@ find_all_markers <- function (seu, metavar = NULL, seurat_assay = "gene", ...)
         } else {
             metavar <- resolutions
         }
-        
+
 
     }
-    new_markers <- purrr::map(metavar, stash_marker_features, 
+    new_markers <- purrr::map(metavar, stash_marker_features,
         seu, seurat_assay = seurat_assay, ...)
     names(new_markers) <- metavar
-    old_markers <- seu@misc$markers[!names(seu@misc$markers) %in% 
+    old_markers <- seu@misc$markers[!names(seu@misc$markers) %in%
         names(new_markers)]
     seu@misc$markers <- c(old_markers, new_markers)
     return(seu)
