@@ -63,7 +63,9 @@ seurat_preprocess <- function(assay, scale = TRUE, normalize = TRUE, features = 
 #' str(marker_genes)
 find_all_markers <- function (seu, metavar = NULL, seurat_assay = "gene", ...)
 {
-    seu[[seurat_assay]] <- JoinLayers(seu[[seurat_assay]])
+    if (inherits(seu[[seurat_assay]], "Assay5")) {
+        seu[[seurat_assay]] <- JoinLayers(seu[[seurat_assay]])
+    }
     if (is.null(metavar)) {
         resolutions <- colnames(seu[[]])[grepl(paste0(seurat_assay,
             "_snn_res."), colnames(seu[[]]))]
