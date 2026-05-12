@@ -275,6 +275,8 @@ seuratApp <- function(preset_project, appTitle = "seuratTools", organism_type = 
                                      tabName = "dotPlots", icon = icon("dot-circle")
             ), shinydashboard::menuItem("Heatmap Plots",
                 tabName = "heatPlots", icon = icon("th")
+            ), shinydashboard::menuItem("Feature Plots",
+                                        tabName = "plotFeatureScatter", icon = icon("sort")
             ), shinydashboard::menuItem("Coverage Plots",
                 tabName = "coveragePlots", icon = icon("mountain")
             ), shinydashboard::menuItem("Differential Expression",
@@ -325,6 +327,9 @@ seuratApp <- function(preset_project, appTitle = "seuratTools", organism_type = 
                 tabName = "violinPlots",
                 fluidRow(
                     plotViolinui("violinPlot")
+                ),
+                fluidRow(
+                    plotQCViolinui("qcViolinPlot")
                 )
             ),
             shinydashboard::tabItem(
@@ -333,6 +338,13 @@ seuratApp <- function(preset_project, appTitle = "seuratTools", organism_type = 
                     plotDotui("dotPlot")
                 )
             ),
+            shinydashboard::tabItem(
+                tabName = "plotFeatureScatter",
+                fluidRow(
+                    plotFeatureScatterUI("featureScatter")
+                )
+            ),
+
             shinydashboard::tabItem(
                 tabName = "heatPlots",
                 fluidRow(
@@ -518,7 +530,7 @@ seuratApp <- function(preset_project, appTitle = "seuratTools", organism_type = 
         })
 
         output$projInput <- renderUI({
-            selectizeInput("setProject", "Select Different Project to Load",
+            selectizeInput("setProject", "OPTIONAL: Change Project",
                 choices = projList(), selected = preset_project,
                 multiple = F
             )
@@ -703,6 +715,7 @@ seuratApp <- function(preset_project, appTitle = "seuratTools", organism_type = 
             plotViolin, "violinPlot", seu, featureType,
             organism_type
         )
+        callModule(plotQCViolin, "qcViolinPlot", seu, featureType, organism_type)
         callModule(
             plotDot, "dotPlot", seu, featureType,
             organism_type
@@ -711,6 +724,8 @@ seuratApp <- function(preset_project, appTitle = "seuratTools", organism_type = 
             plotHeatmap, "heatMap", seu, featureType,
             organism_type
         )
+        callModule(plotFeatureScatter, "featureScatter", seu)
+
 
         callModule(
             plotCoverage, "coverageplots", seu, plot_types, proj_dir, organism_type, bigwig_db = bigwig_db

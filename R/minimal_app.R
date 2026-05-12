@@ -25,10 +25,10 @@ minimalSeuratApp <- function(object = panc8, loom_path = NULL, appTitle = NULL,
         info = TRUE, searching = TRUE, autoWidth = F, ordering = TRUE,
         scrollX = TRUE, language = list(search = "Filter:")
     ))
-    header <- shinydashboard::dashboardHeader(title = "FL-scRNA seq analysis of Shayler et al.(2025)")
+    header <- shinydashboard::dashboardHeader(title = "Minimal seuFL-Viz App")
     sidebar <- shinydashboard::dashboardSidebar(
         # img(src = "www/chla_butterfly_and_name.jpg", alt = "My Image"),
-        tags$a(href="https://elifesciences.org/reviewed-preprints/101918#tab-content", "Check out the related publication here!", target = "_blank"),
+        # tags$a(href="https://elifesciences.org/reviewed-preprints/101918#tab-content", "Check out the related publication here!", target = "_blank"),
     # header <- shinydashboard::dashboardHeader(title = "Cobrinik lab")
     # sidebar <- shinydashboard::dashboardSidebar(
     #   # img(src = "www/chla_butterfly_and_name.jpg", alt = "My Image"),
@@ -44,6 +44,10 @@ minimalSeuratApp <- function(object = panc8, loom_path = NULL, appTitle = NULL,
                 tabName = "heatPlot", icon = icon("sort")
             ), shinydashboard::menuItem("Violin Plots",
                 tabName = "violinPlots", icon = icon("sort")
+            ), shinydashboard::menuItem("Dot Plots",
+                                        tabName = "dotPlots", icon = icon("dot-circle")
+            ),shinydashboard::menuItem("Feature Plots",
+                                       tabName = "plotFeatureScatter", icon = icon("sort")
             ), shinydashboard::menuItem("Coverage Plots",
                   tabName = "coveragePlots", icon = icon("mountain")
             ), shinydashboard::menuItem("Differential Expression",
@@ -100,6 +104,21 @@ minimalSeuratApp <- function(object = panc8, loom_path = NULL, appTitle = NULL,
                 tabName = "violinPlots",
                 fluidRow(
                     plotViolinui("violinPlot")
+                ),
+                fluidRow(
+                    plotQCViolinui("qcViolinPlot")
+                )
+            ),
+            shinydashboard::tabItem(
+                tabName = "plotFeatureScatter",
+                fluidRow(
+                    plotFeatureScatterUI("featureScatter")
+                )
+            ),
+            shinydashboard::tabItem(
+                tabName = "dotPlots",
+                fluidRow(
+                    plotDotui("dotPlot")
                 )
             ),
             shinydashboard::tabItem(
@@ -201,7 +220,7 @@ minimalSeuratApp <- function(object = panc8, loom_path = NULL, appTitle = NULL,
                 techInfoui("techInfo")
             ), shinydashboard::tabItem(
                 tabName = "userHelp",
-                h2("Interactive visualization of human photoreceptor-enriched full-length single-cell RNA-sequencing"),
+                h2("Minimal seuFL-Viz App"),
                 userHelpui("userHelp")
             )
         )
@@ -283,6 +302,11 @@ minimalSeuratApp <- function(object = panc8, loom_path = NULL, appTitle = NULL,
             plotViolin, "violinPlot", seu, featureType,
             organism_type
         )
+        callModule(plotQCViolin, "qcViolinPlot", seu, featureType, organism_type)
+        callModule(
+            plotDot, "dotPlot", seu, featureType,
+            organism_type
+        )
         callModule(
             plotHeatmap, "heatMap", seu, featureType,
             organism_type
@@ -314,6 +338,7 @@ minimalSeuratApp <- function(object = panc8, loom_path = NULL, appTitle = NULL,
         })
 
         callModule(findMarkers, "findmarkers", seu, plot_types, featureType)
+        callModule(plotFeatureScatter, "featureScatter", seu)
 
         # callModule(pathwayEnrichment, "pathwayEnrichment", seu)
 

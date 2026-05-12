@@ -182,6 +182,238 @@ plotViolin <- function(input, output, session, seu, featureType, organism_type) 
     })
 }
 
+
+
+#' PLOT QC VIOLIN Title
+#'
+#' @param id
+#'
+#' @return
+#' @export
+#'
+#' @examples
+
+plotQCViolinui <- function(id) {
+    ns <- NS(id)
+    tagList(
+        seuratToolsBox(
+            title = "QC Violin Plots",
+            uiOutput(ns("vln_group")),
+            selectizeInput(ns("qc_metric"), "QC Metric to Plot",
+                           choices = c("nCount_gene", "nFeature_gene", "percent.mt"),
+                           selected = "nCount_gene",
+                           multiple = TRUE
+            ),
+            uiOutput(ns("vln_displayui")),
+            actionButton(ns("actionViolin"), "QC Plot Violin Map"),
+            downloadButton(ns("downloadPlot")),
+            plotly::plotlyOutput(ns("vplot"), height = 750),
+            width = 11
+        )
+    )
+}
+
+#### PLOT VIOLIN QC METRICS
+plotQCViolin <- function(input, output, session, seu, ...) {
+    ns <- session$ns
+
+    # Dynamically get available QC metrics from metadata
+    observe({
+        req(seu())
+        qc_cols <- colnames(seu()[[]])[grepl("nCount|nFeature|percent", colnames(seu()[[]]))]
+        updateSelectizeInput(session, "qc_metric",
+                             choices = qc_cols,
+                             selected = qc_cols[1]
+        )
+    })
+
+    output$vln_group <- renderUI({
+        req(seu())
+        selectizeInput(ns("vlnGroup"), "Categorical variable used to define groups",
+                       choices = colnames(seu()[[]])[sapply(seu()[[]], is.factor) | sapply(seu()[[]], is.character)],
+                       selected = "seurat_clusters"
+        )
+    })
+
+    vln_display <- reactive({
+        req(input$vlnGroup)
+        req(seu())
+        unique(seu()[[]][[input$vlnGroup]])
+    })
+
+    output$vln_displayui <- renderUI({
+        req(input$vlnGroup)
+        selectizeInput(ns("vln_display"), "Groups to display",
+                       choices = vln_display(),
+                       selected = vln_display(),
+                       multiple = TRUE
+        )
+    })
+
+    vln_plot <- eventReactive(input$actionViolin, {
+        req(input$qc_metric)
+        req(input$vlnGroup)
+        req(input$vln_display)
+
+        seurat_obj <- seu()
+
+        # Subset to selected groups
+        seurat_obj <- subset(seurat_obj, cells = which(seurat_obj[[]][[input$vlnGroup]] %in% input$vln_display))
+
+        seurat_obj[[input$vlnGroup]] <- factor(
+            seurat_obj[[]][[input$vlnGroup]],
+            levels = input$vln_display
+        )
+
+        VlnPlot(
+            seurat_obj,
+            features = input$qc_metric,
+            group.by = input$vlnGroup,
+            pt.size = 0.1
+        ) +
+            ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45, hjust = 1)) +
+            ggplot2::xlab(input$vlnGroup) +
+            ggplot2::ggtitle(input$qc_metric)
+    })
+
+    output$downloadPlot <- downloadHandler(
+        filename = function() {
+            paste0("qc_violin_", input$qc_metric, ".pdf")
+        },
+        content = function(file) {
+            ggsave(file, vln_plot() + ggpubr::theme_pubr(base_size = 20, x.text.angle = 45),
+                   width = 16, height = 12
+            )
+        }
+    )
+
+    output$vplot <- plotly::renderPlotly({
+        req(seu())
+        req(input$vlnGroup)
+        exclude_trace_number <- length(unique(seu()[[]][[input$vlnGroup]])) * 2
+        plotly::ggplotly(vln_plot(), height = 700) %>%
+            plotly::style(opacity = 0.5) %>%
+            plotly::style(hoverinfo = "skip", traces = c(1:exclude_trace_number)) %>%
+            plotly_settings(width = 1200) %>%
+            plotly::toWebGL() %>%
+            identity()
+    })
+}
+
+##END
+
+#' Feature Scatter Plot UI
+#'
+#' @param id Module ID
+#'
+#' @return
+#' @export
+plotFeatureScatterUI <- function(id) {
+    ns <- NS(id)
+    tagList(
+        seuratToolsBox(
+            title = "Feature Scatter Plot",
+            uiOutput(ns("scatter_group")),
+            selectizeInput(ns("feature1"),
+                           "Feature 1 (X axis) e.g. 'S.Score'",
+                           choices = NULL, multiple = FALSE
+            ),
+            selectizeInput(ns("feature2"),
+                           "Feature 2 (Y axis) e.g. 'G2M.Score'",
+                           choices = NULL, multiple = FALSE
+            ),
+            actionButton(ns("actionScatter"), "Plot Feature Scatter"),
+            downloadButton(ns("downloadPlot")),
+            plotly::plotlyOutput(ns("scatter_plot"), height = 750),
+            width = 11
+        ) %>%
+            default_helper(type = "markdown", content = "featureScatter", size = "l")
+    )
+}
+
+#' Feature Scatter Plot Server
+#'
+#' Plots a Feature Scatter plot of two features colored by a grouping variable.
+#'
+#' @param input
+#' @param output
+#' @param session
+#' @param seu Seurat object
+#'
+#' @return
+#' @export
+plotFeatureScatter <- function(input, output, session, seu) {
+    ns <- session$ns
+
+    # Populate group.by dropdown from metadata columns
+    output$scatter_group <- renderUI({
+        req(seu())
+        selectizeInput(ns("scatterGroup"),
+                       "Group by (categorical variable)",
+                       choices = colnames(seu()[[]]),
+                       selected = "seurat_clusters"
+        )
+    })
+
+    # Populate feature dropdowns with both metadata numeric cols + gene names
+    observe({
+        req(seu())
+
+        # Combine metadata numeric columns and gene names as selectable features
+        meta_numeric <- colnames(seu()[[]])[sapply(seu()[[]], is.numeric)]
+        gene_features <- unique(unlist(map(seu()@assays, rownames)))
+        all_features  <- c(meta_numeric, gene_features)
+
+        updateSelectizeInput(session, "feature1",
+                             choices  = all_features,
+                             selected = "S.Score",
+                             server   = TRUE
+        )
+        updateSelectizeInput(session, "feature2",
+                             choices  = all_features,
+                             selected = "G2M.Score",
+                             server   = TRUE
+        )
+    })
+
+    # Generate plot on button click
+    scatter_plot <- eventReactive(input$actionScatter, {
+        req(input$feature1)
+        req(input$feature2)
+        req(input$scatterGroup)
+
+        FeatureScatter(
+            seu(),
+            feature1 = input$feature1,
+            feature2 = input$feature2,
+            group.by = input$scatterGroup
+        ) + ggtitle(paste("Group by", input$scatterGroup))
+    })
+
+    # Download handler
+    output$downloadPlot <- downloadHandler(
+        filename = function() {
+            paste0("feature_scatter_",
+                   input$feature1, "_vs_",
+                   input$feature2, ".pdf")
+        },
+        content = function(file) {
+            ggsave(file,
+                   scatter_plot() + ggpubr::theme_pubr(base_size = 20),
+                   width = 10, height = 8)
+        }
+    )
+
+    # Render plotly output
+    output$scatter_plot <- plotly::renderPlotly({
+        req(scatter_plot())
+        plotly::ggplotly(scatter_plot(), height = 700) %>%
+            plotly_settings(width = 1200) %>%
+            plotly::toWebGL() %>%
+            identity()
+    })
+}
+
 ####CUT
 
 #' Title
