@@ -61,9 +61,9 @@ seurat_preprocess <- function(assay, scale = TRUE, normalize = TRUE, features = 
 #' markers_stashed_seu <- find_all_markers(panc8)
 #' marker_genes <- Misc(markers_stashed_seu, "markers")
 #' str(marker_genes)
-find_all_markers <- function (seu, metavar = NULL, seurat_assay = "gene", ...)
+find_all_markers <- function (seu, metavar = NULL, seurat_assay = "gene", join_layers = TRUE,...)
 {
-    if (inherits(seu[[seurat_assay]], "Assay5")) {
+    if (join_layers && inherits(seu[[seurat_assay]], "Assay5")) {
         seu[[seurat_assay]] <- JoinLayers(seu[[seurat_assay]])
     }
     if (is.null(metavar)) {
