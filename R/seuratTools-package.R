@@ -29,9 +29,6 @@
 #' @importFrom shinyjs runcodeServer
 #' @importFrom shinyjs runcodeUI
 #' @importFrom shinyjs useShinyjs
-#' @importFrom velociraptor embedVelocity
-#' @importFrom velociraptor gridVectors
-#' @importFrom velociraptor scvelo
 #'
 ## usethis namespace: end
 NULL
